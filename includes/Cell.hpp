@@ -10,7 +10,7 @@ class Cell {
 
 public:
     // Cell();
-    Cell(Pos origin, Size size, CellClass config);
+    Cell(int id, Pos origin, Size size, CellClass config);
     ~Cell();
 
     void    draw(SDL_Renderer* renderer);
@@ -18,12 +18,18 @@ public:
     void    updatePos();
 
 
-private:
+    int     getID() const;
+    Pos     getPos() const;
+    int     getVision() const;
 
+    void    setDebugShape();
+
+private:
     SDL_FRect   m_shape;
+
     Pos         m_pos;
 
-
+    int         m_id;
     SDL_Color   m_color;
     CellType    m_type;
     int         m_speed;
@@ -31,6 +37,11 @@ private:
     // int         m_energy;
     int         m_vision;
     int         m_movement;
+
+
+    SDL_FRect   m_debug_rect;
+    bool        m_debug = false;
+
 };
 
 #endif // !ve

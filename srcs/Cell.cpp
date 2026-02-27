@@ -2,8 +2,12 @@
 #include "config.h"
 #include "pch.h"
 
+enum class CellState {Default, Escape, Attack};
 
-Cell::Cell(Pos origin, Size size, CellClass config) {
+Cell::Cell(int id, Pos origin, Size size, CellClass config) {
+
+    cellCreationAssert(config);
+    m_id = id;
     float w = size.w;
     float h = size.h;
     m_shape = {origin.x, origin.y, w, h};
@@ -20,7 +24,11 @@ Cell::~Cell() {}
 
 void    Cell::draw(SDL_Renderer* renderer) {
     setRenderDrawColor(renderer, m_color);
-    SDL_RenderRect(renderer, &m_shape);
+    SDL_RenderFillRect(renderer, &m_shape);
+    if (m_debug)
+    {
+        SDL_RenderRect(renderer, &m_debug_rect);
+    }
 }
 
 void    Cell::setPos(Pos pos) {
@@ -33,4 +41,19 @@ void    Cell::updatePos() {
 
 }
 
+Pos     Cell::getPos() const { return m_pos;};
+
+int     Cell::getID() const { return m_id;};
+
+int     Cell::getVision() const { return m_vision;};
+
+
+void    Cell::setDebugShape() {
+    m_debug = true;
+    m_debug_rect.w = m_vision * 2 + Window_Config::CELL_SIZE;
+    m_debug_rect.h = m_vision * 2 + Window_Config::CELL_SIZE;
+    m_debug_rect.x = m_shape.x - m_vision ;
+    m_debug_rect.y = m_shape.y - m_vision;
+
+};
 

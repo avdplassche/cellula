@@ -36,3 +36,13 @@ Pos    getRandomPos() {
                                   Window_Config::CELL_SIZE);
     return p;
 }
+
+
+void    cellCreationAssert(CellClass& c) {
+    assert(static_cast<int>(c.type) >= 0);
+    assert(c.speed[0] >= 0 && c.speed[1] >= 0 && c.speed[0] <=100 && c.speed[1] <=100);
+    assert(c.vision[0] >= 0 && c.vision[1] >= 0 & c.vision[0] <=100 && c.vision[1] <=100);
+}
+
+
+

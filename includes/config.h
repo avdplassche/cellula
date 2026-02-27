@@ -11,8 +11,10 @@ namespace Window_Config {
 	inline constexpr int CELL_SIZE = 4;
     inline constexpr int GRID_W = WIDTH / CELL_SIZE;
 	inline constexpr int GRID_H = HEIGHT / CELL_SIZE;
-    inline constexpr int PLAYGROUND_WIDTH = WIDTH;
-    inline constexpr int PLAYGROUND_HEIGHT = HEIGHT;
+    inline constexpr int MARGIN_X = 40;
+    inline constexpr int MARGIN_Y = 40;
+    inline constexpr int PLAYGROUND_WIDTH = WIDTH - MARGIN_X * 2;
+    inline constexpr int PLAYGROUND_HEIGHT = HEIGHT - MARGIN_Y * 2 - 26;
 
 	// inline constexpr int GRID_W = 1024 / CELL_SIZE;
 	// inline constexpr int GRID_H = 1024 / CELL_SIZE;
@@ -46,7 +48,7 @@ namespace Color_Palette {
 	inline const SDL_Color PURPLE_CHARACTER = {170, 51, 106, 255};
 
 
-    inline const SDL_Color PREY     = { 180, 230, 180, 255 };
+    inline const SDL_Color PREY     = { 120, 230, 120, 255 };
     inline const SDL_Color PREDATOR = { 210, 45, 45, 255 };
 }
 
