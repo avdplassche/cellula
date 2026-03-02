@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "pch.h"
+#include <SDL3/SDL_mouse.h>
 
 enum class CellType {Prey, Predator};
 
@@ -39,7 +40,8 @@ private:
     int         m_movement;
 
 
-    SDL_FRect   m_debug_rect;
+    SDL_Circle  m_debug_circle;
+    // SDL_FRect   m_debug_rect;
     bool        m_debug = false;
 
 };

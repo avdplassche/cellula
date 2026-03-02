@@ -2,6 +2,7 @@
 #include "Cell.hpp"
 #include "config.h"
 #include "pch.h"
+#include <cmath>
 #include <iterator>
 
 
@@ -33,15 +34,66 @@ Playground::Playground(SimConfig conf){
     }
     m_sortLists();
 
-    for (auto it = m_x_list.begin(); it != std::prev(m_x_list.end()); ++it) {
+    for (auto it = m_x_list.begin(); it != m_x_list.end(); ++it) {
         auto current = *it;
-        auto next_cell = *std::next(it);
+        float v_sq = current->getVision() * current->getVision();
 
-        std::cout << current->getPos().x << " - " << next_cell->getPos().x << '\n';
-        if (next_cell->getPos().x - current->getPos().x <= current->getVision()) {
-            current->setDebugShape();
-    }
-    }
+        auto forward_it = std::next(it);
+        while (forward_it != m_x_list.end()) {
+            auto other = *forward_it;
+            if (other->getPos().x - current->getPos().x > current->getVision()) break;
+            
+            float dx = other->getPos().x - current->getPos().x;
+            float dy = other->getPos().y - current->getPos().y;
+            if ((dx * dx + dy * dy) <= v_sq) current->setDebugShape();
+            ++forward_it;
+        }
+
+        if (it != m_x_list.begin()) {
+            auto backward_it = std::prev(it);
+            while (true) {
+                auto other = *backward_it;
+                if (current->getPos().x - other->getPos().x > current->getVision()) break;
+                
+                float dx = current->getPos().x - other->getPos().x;
+                float dy = other->getPos().y - current->getPos().y;
+                if ((dx * dx + dy * dy) <= v_sq) current->setDebugShape();
+                
+                if (backward_it == m_x_list.begin()) break;
+                --backward_it;
+            }
+        }
+    } 
+    for (auto it = m_y_list.begin(); it != m_y_list.end(); ++it) {
+        auto current = *it;
+        float v_sq = current->getVision() * current->getVision();
+
+        auto forward_it = std::next(it);
+        while (forward_it != m_y_list.end()) {
+            auto other = *forward_it;
+            if (other->getPos().y - current->getPos().y > current->getVision()) break;
+            
+            float dx = other->getPos().x - current->getPos().x;
+            float dy = other->getPos().y - current->getPos().y;
+            if ((dx * dx + dy * dy) <= v_sq) current->setDebugShape();
+            ++forward_it;
+        }
+
+        if (it != m_y_list.begin()) {
+            auto backward_it = std::prev(it);
+            while (true) {
+                auto other = *backward_it;
+                if (current->getPos().y - other->getPos().y > current->getVision()) break;
+                
+                float dx = current->getPos().x - other->getPos().x;
+                float dy = other->getPos().y - current->getPos().y;
+                if ((dx * dx + dy * dy) <= v_sq) current->setDebugShape();
+                
+                if (backward_it == m_y_list.begin()) break;
+                --backward_it;
+            }
+        }
+    } 
 }
 
 Playground::~Playground(){

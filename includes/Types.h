@@ -33,5 +33,8 @@ struct Vec2 {
     float x, y;
 };
 
-
+struct SDL_Circle {
+    float   x, y;
+    int     radius;
+};
 

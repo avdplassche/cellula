@@ -13,6 +13,8 @@
 
 #include <iostream>
 #include <string>
+
+#include <cmath>
 #include <random>
 #include <chrono>
 
@@ -29,6 +31,8 @@ void	setRenderDrawColor(SDL_Renderer *renderer, SDL_Color color);
 int     getRandomMultiple(int min, int max, int multiple);
 int     getRandomInt(int min, int max);
 Pos     getRandomPos();
+
+void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius);
 
 
 

@@ -10,8 +10,8 @@ CellClass   preyConfig() {
     prey.color =  Color_Palette::PREY;
     prey.speed[0] = 50;
     prey.speed[1] = 60;
-    prey.vision[0] = 10;
-    prey.vision[1] = 15;
+    prey.vision[0] = 50;
+    prey.vision[1] = 60;
     return prey;
 }
 

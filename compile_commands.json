@@ -1,0 +1,178 @@
+[
+  {
+    "file": "srcs/main.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "srcs/main.cpp",
+      "-o",
+      "build/srcs/main.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/srcs/main.cpp.o"
+  },
+  {
+    "file": "srcs/App.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "srcs/App.cpp",
+      "-o",
+      "build/srcs/App.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/srcs/App.cpp.o"
+  },
+  {
+    "file": "srcs/Cell.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "srcs/Cell.cpp",
+      "-o",
+      "build/srcs/Cell.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/srcs/Cell.cpp.o"
+  },
+  {
+    "file": "srcs/Playground.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "srcs/Playground.cpp",
+      "-o",
+      "build/srcs/Playground.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/srcs/Playground.cpp.o"
+  },
+  {
+    "file": "srcs/utils.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "srcs/utils.cpp",
+      "-o",
+      "build/srcs/utils.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/srcs/utils.cpp.o"
+  },
+  {
+    "file": "data/cell_types/predator.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "data/cell_types/predator.cpp",
+      "-o",
+      "build/data/cell_types/predator.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/data/cell_types/predator.cpp.o"
+  },
+  {
+    "file": "data/cell_types/prey.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "data/cell_types/prey.cpp",
+      "-o",
+      "build/data/cell_types/prey.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/data/cell_types/prey.cpp.o"
+  },
+  {
+    "file": "data/sim_config/simulation_01.cpp",
+    "arguments": [
+      "clang++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++17",
+      "-MMD",
+      "-MP",
+      "-g",
+      "-Wno-unused-result",
+      "-Iincludes",
+      "-DImTextureID=void*",
+      "-c",
+      "data/sim_config/simulation_01.cpp",
+      "-o",
+      "build/data/sim_config/simulation_01.cpp.o"
+    ],
+    "directory": "/home/alex-vdp/dev/cpp_projects/cellula",
+    "output": "build/data/sim_config/simulation_01.cpp.o"
+  }
+]
