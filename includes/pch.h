@@ -1,5 +1,7 @@
 #pragma once
 
+class Cell;
+
 ////	External Libraries
 
 #include <SDL3/SDL.h>
@@ -34,6 +36,8 @@ Pos     getRandomPos();
 
 void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius);
 
+
+void    setCollision(Cell *current, Cell *other);
 
 
 ////    Structures

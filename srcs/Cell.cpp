@@ -2,7 +2,7 @@
 #include "config.h"
 #include "pch.h"
 
-enum class CellState {Default, Escape, Attack};
+
 
 Cell::Cell(int id, Pos origin, Size size, CellClass config) {
 
@@ -33,13 +33,11 @@ void    Cell::draw(SDL_Renderer* renderer) {
     }
     else
     {
-
-        setRenderDrawColor(renderer, Color_Palette::GRID_LINES);
+        setRenderDrawColor(renderer, Color_Palette::GREY_LINES);
         DrawCircle(renderer,
                   m_shape.x + m_shape.w / 2,
                   m_shape.y + m_shape.h / 2,
                    m_vision);
-
     }
 }
 
@@ -47,6 +45,15 @@ void    Cell::setPos(Pos pos) {
     m_shape.x = pos.x;
     m_shape.y = pos.y;
     m_pos = pos;
+}
+
+void    Cell::setState(CellState state) {
+    this->m_state = state;
+}
+
+
+void    Cell::setOther(Cell* cell, CellType type) {
+    m_map[cell] = type;
 }
 
 void    Cell::updatePos() {
@@ -59,6 +66,12 @@ int     Cell::getID() const { return m_id;};
 
 int     Cell::getVision() const { return m_vision;};
 
+CellType    Cell::getType() const { return m_type;};
+
+
+std::unordered_map<Cell*, CellType> Cell::getMap() const {
+    return this->m_map;
+}
 
 void    Cell::setDebugShape() {
     m_debug = true;

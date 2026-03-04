@@ -35,6 +35,8 @@ namespace Grid_Config {
 namespace Color_Palette {
 	inline const SDL_Color MAIN_BACKGROUND = { 30,  30,  30, 255 };
 	inline const SDL_Color SCOPE_BACKGROUND = { 50,  50,  50, 255 };
+
+	inline const SDL_Color GREY_LINES = { 80,  80,  80, 255 };
 	inline const SDL_Color GRID_LINES = { 120,  120,  120, 255 };
 	inline const SDL_Color SELECTED_GRID_LINES = { 220,  220,  220, 255 };
 	inline const SDL_Color TEXT	   = { 255, 255, 255, 255 };

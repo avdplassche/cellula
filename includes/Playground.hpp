@@ -21,7 +21,7 @@ private:
     int                 m_cell_number;
 
 
-    void                m_checkSimulation();
+    void                m_checkCollisions();
     void                m_sortLists();
 };
 
