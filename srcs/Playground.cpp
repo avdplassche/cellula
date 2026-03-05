@@ -33,8 +33,7 @@ Playground::Playground(SimConfig conf){
         m_y_list.push_back(c);
         cell_id++;
     }
-    m_sortLists();
-
+    update();
 }
 
 Playground::~Playground(){
@@ -45,9 +44,12 @@ Playground::~Playground(){
 }
 
 void    Playground::update() {
+    for (auto& cell : m_x_list)
+        cell->emptyOthers();
     m_sortLists();
     m_checkCollisions();
-    // m_updateMove();
+    for (auto& cell : m_x_list)
+        cell->updateMovement();
 }
 
 

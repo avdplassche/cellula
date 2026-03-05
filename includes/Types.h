@@ -6,11 +6,6 @@
 enum class CellType;
 struct SDL_Color;
 
-
-struct Pos {
-  float x, y;
-};
-
 /** int w, h;
  */
 struct Size {
@@ -31,6 +26,12 @@ struct GridSize {
 
 struct Vec2 {
     float x, y;
+};
+
+
+struct Pos {
+    float x, y;
+    // Pos   operator+(Vec2& v) { return {x + v.x, y + v.y};};
 };
 
 struct SDL_Circle {

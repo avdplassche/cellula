@@ -4,7 +4,8 @@
 #include "Types.h"
 #include "pch.h"
 #include <SDL3/SDL_mouse.h>
-#include <unordered_map>
+
+#include <map>
 
 enum class CellType {Prey, Predator};
 enum class CellState {Default, Escape, Attack};
@@ -17,17 +18,21 @@ public:
 
     void    draw(SDL_Renderer* renderer);
     void    setPos(Pos pos);
+
+    void    emptyOthers();
+    void    updateMovement();
     void    updatePos();
 
     void    setState(CellState);
     void    setOther(Cell*, CellType);
 
+    void    setOther(float distance, Cell* cell);
     int     getID() const;
     Pos     getPos() const;
     int     getVision() const;
 
     CellType    getType() const;
-    std::unordered_map<Cell*, CellType> getMap() const;
+    std::vector<std::pair<float, Cell*>> getMap() const;
 
     void    setDebugShape();
 
@@ -35,6 +40,7 @@ private:
     SDL_FRect       m_shape;
 
     Pos             m_pos;
+    Vec2            m_movement;
 
     int             m_id;
     SDL_Color       m_color;
@@ -44,9 +50,8 @@ private:
     // int             m_mult;
     // int             m_energy;
     int             m_vision;
-    int             m_movement;
 
-    std::unordered_map<Cell*, CellType> m_map;
+    std::vector<std::pair<float, Cell*>> m_others;
 
 
     SDL_Circle  m_debug_circle;

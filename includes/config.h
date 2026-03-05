@@ -24,6 +24,7 @@ namespace Window_Config {
     inline constexpr int PLAYGROUND_POS_Y = HEIGHT / 2.0 - PLAYGROUND_HEIGHT / 2.0;
     inline constexpr Size S_CELL_SIZE = {CELL_SIZE, CELL_SIZE};
 
+    inline constexpr float SPEED = 0.2;
 
 }
 
