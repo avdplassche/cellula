@@ -38,8 +38,8 @@ void    Cell::draw(SDL_Renderer* renderer) {
     // {
     //     setRenderDrawColor(renderer, Color_Palette::GREY_LINES);
     //     DrawCircle(renderer,
-    //               m_shape.x + m_shape.w / 2,
-    //               m_shape.y + m_shape.h / 2,
+    //               m_shape.x,
+    //               m_shape.y,
     //                m_vision);
     // }
 }
@@ -77,10 +77,6 @@ void    Cell::updateMovement() {
     auto other = std::min_element(m_others.begin(), m_others.end());
     m_movement.setValues(other->second->getPos().x - this->m_pos.x,
         other->second->getPos().y - this->m_pos.y);
-    // Vec2 tot(0, 0);
-    // for (auto cell : m_others) 
-    //     tot.setValues(cell.second->getPos().x + tot.x, cell.second->getPos().y + tot.y);
-    //  m_movement.setValues(tot.x / m_others.size(), tot.y / m_others.size());
     if (m_type == CellType::Prey && other->second->getType() == CellType::Predator)
     {
         m_movement.normalize();
@@ -89,7 +85,6 @@ void    Cell::updateMovement() {
     else if (m_type == CellType::Predator && other->second->getType() == CellType::Prey)
     {
         m_movement.normalize();
-
     }
     // setPos(m_pos + m_movement);
     updatePos();
@@ -97,6 +92,16 @@ void    Cell::updateMovement() {
 }
 
 void    Cell::updatePos() {
+    if (m_pos.x <= Window_Config::MARGIN_X || m_pos.x >= Window_Config::MARGIN_X + Window_Config::PLAYGROUND_WIDTH)
+    {
+        m_movement.x = 0;
+        m_movement.y >= 0 ? m_movement.y = 1 : m_movement.y == -1;
+    }
+    else if (m_pos.y <= Window_Config::MARGIN_Y || m_pos.y >= Window_Config::MARGIN_Y + Window_Config::PLAYGROUND_HEIGHT)
+    {
+        m_movement.y = 0;
+        m_movement.x >= 0 ? m_movement.x = 1 : m_movement.x == -1;
+    }
     m_pos.x += m_movement.x * m_speed * Window_Config::SPEED;
     m_pos.y += m_movement.y * m_speed * Window_Config::SPEED;
     setPos(m_pos);
@@ -120,8 +125,8 @@ std::vector<std::pair<float, Cell*>> Cell::getMap() const {
 
 void    Cell::setDebugShape() {
     m_debug = true;
-    // m_debug_circle.x = m_shape.x + m_shape.w / 2;
-    // m_debug_circle.y = m_shape.y + m_shape.h / 2;
+    m_debug_circle.x = m_shape.x;
+    m_debug_circle.y = m_shape.y;
     m_debug_circle.radius = m_vision;
 };
 

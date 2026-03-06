@@ -19,7 +19,8 @@ endif
 STD_FLAGS := -Wall -Wextra -Werror -std=c++17 -MMD -MP -g -Wno-unused-result
 INC_PATHS := -I$(INCDIR)
 CXXFLAGS  := $(STD_FLAGS) $(INC_PATHS) $(ASAN_FLAGS) -DImTextureID=void*
-LD_FLAGS  := $(ASAN_FLAGS) -lGL -lSDL3 -lSDL3_ttf -lSDL3_image
+LD_FLAGS  := $(ASAN_FLAGS) -lGL -lSDL3 -lSDL3_ttf -lSDL3_image -lyaml-cpp
+
 
 # --- 2. FILE DEFINITIONS ---
 

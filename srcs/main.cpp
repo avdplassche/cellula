@@ -1,12 +1,22 @@
 #include <cstdlib>
 #include <pch.h>
 #include <App.hpp>
+#include <type_traits>
+#include <yaml-cpp/yaml.h>
 
 int main() {
 
 	App app;
 	SDL_Event event;
 
+    YAML::Node config = YAML::LoadFile("config/config.yaml");
+    if (config.IsNull())
+    {
+        std::cerr << "Error opening config file" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::cout << config["window"]["width"]<< std::endl;
 	if (app.init() == -1)
 		return EXIT_FAILURE;
     std::cout << "App Initialized\n";

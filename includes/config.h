@@ -8,7 +8,7 @@ namespace Window_Config {
 	inline constexpr int WIDTH = 1920;
 	inline constexpr int HEIGHT = 1200;
 	inline constexpr const char* WINDOW_NAME = "Cellula";
-	inline constexpr int CELL_SIZE = 1;
+	inline constexpr int CELL_SIZE = 2;
     inline constexpr int GRID_W = WIDTH / CELL_SIZE;
 	inline constexpr int GRID_H = HEIGHT / CELL_SIZE;
     inline constexpr int MARGIN_X = 20;
