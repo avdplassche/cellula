@@ -8,11 +8,11 @@ namespace Window_Config {
 	inline constexpr int WIDTH = 1920;
 	inline constexpr int HEIGHT = 1200;
 	inline constexpr const char* WINDOW_NAME = "Cellula";
-	inline constexpr int CELL_SIZE = 4;
+	inline constexpr int CELL_SIZE = 1;
     inline constexpr int GRID_W = WIDTH / CELL_SIZE;
 	inline constexpr int GRID_H = HEIGHT / CELL_SIZE;
-    inline constexpr int MARGIN_X = 40;
-    inline constexpr int MARGIN_Y = 40;
+    inline constexpr int MARGIN_X = 20;
+    inline constexpr int MARGIN_Y = 20;
     inline constexpr int PLAYGROUND_WIDTH = WIDTH - MARGIN_X * 2;
     inline constexpr int PLAYGROUND_HEIGHT = HEIGHT - MARGIN_Y * 2 - 26;
 
@@ -24,7 +24,7 @@ namespace Window_Config {
     inline constexpr int PLAYGROUND_POS_Y = HEIGHT / 2.0 - PLAYGROUND_HEIGHT / 2.0;
     inline constexpr Size S_CELL_SIZE = {CELL_SIZE, CELL_SIZE};
 
-    inline constexpr float SPEED = 0.2;
+    inline constexpr float SPEED = 1.5;
 
 }
 

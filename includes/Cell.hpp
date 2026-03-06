@@ -2,6 +2,7 @@
 #define CELL_HPP
 
 #include "Types.h"
+#include "Vec2.hpp"
 #include "pch.h"
 #include <SDL3/SDL_mouse.h>
 
@@ -37,7 +38,8 @@ public:
     void    setDebugShape();
 
 private:
-    SDL_FRect       m_shape;
+    // SDL_FRect       m_rect_shape;
+    SDL_Circle       m_shape;
 
     Pos             m_pos;
     Vec2            m_movement;
@@ -46,7 +48,7 @@ private:
     SDL_Color       m_color;
     CellType        m_type;
     CellState       m_state = CellState::Default;
-    int             m_speed;
+    float           m_speed;
     // int             m_mult;
     // int             m_energy;
     int             m_vision;

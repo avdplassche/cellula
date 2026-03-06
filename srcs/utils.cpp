@@ -21,9 +21,16 @@ int getRandomInt(int min, int max) {
     unsigned int seed = static_cast<unsigned int>(
             std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::mt19937 gen(seed);
-    //int rand = min + std::rand() % (max - min + 1);
     return std::uniform_int_distribution<>(min, max)(gen);
 }
+
+float getRandomFloat(float min, float max) {
+    unsigned int seed = static_cast<unsigned int>(
+            std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::mt19937 gen(seed);
+    return std::uniform_real_distribution<float>(min, max)(gen);
+}
+
 
 
 Pos    getRandomPos() {

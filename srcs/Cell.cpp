@@ -5,15 +5,16 @@
 
 
 
-Cell::Cell(int id, Pos origin, Size size, CellClass config) {
-
+Cell::Cell(int id, Pos origin, Size size, CellClass config): m_movement(0.0f, 0.0f) {
+    (void)size;
     cellCreationAssert(config);
     m_id = id;
-    float w = size.w;
-    float h = size.h;
-    m_shape = {origin.x, origin.y, w, h};
+    // float w = size.w;
+    // float h = size.h;
+    // m_rect_shape = {origin.x, origin.y, w, h};
+    m_shape = {origin.x, origin.y, Window_Config::CELL_SIZE};
     m_type = config.type;
-    m_speed = getRandomInt(config.speed[0], config.speed[1]);
+    m_speed = getRandomFloat(config.speed[0], config.speed[1]) / 100;
     m_vision = getRandomInt(config.vision[0], config.vision[1]);
     m_pos = origin;
     m_color = config.color;
@@ -24,27 +25,31 @@ Cell::~Cell() {}
 
 void    Cell::draw(SDL_Renderer* renderer) {
     setRenderDrawColor(renderer, m_color);
-    SDL_RenderFillRect(renderer, &m_shape);
-    if (m_debug)
-    {
-        DrawCircle(renderer,
-                   m_debug_circle.x,
-                   m_debug_circle.y,
-                   m_debug_circle.radius);
-    }
-    else
-    {
-        setRenderDrawColor(renderer, Color_Palette::GREY_LINES);
-        DrawCircle(renderer,
-                  m_shape.x + m_shape.w / 2,
-                  m_shape.y + m_shape.h / 2,
-                   m_vision);
-    }
+    // SDL_RenderFillRect(renderer, &m_rect_shape);
+    DrawCircle(renderer, m_shape.x, m_shape.y, Window_Config::CELL_SIZE);
+    // if (m_debug)
+    // {
+    //     DrawCircle(renderer,
+    //                m_debug_circle.x,
+    //                m_debug_circle.y,
+    //                m_debug_circle.radius);
+    // }
+    // else
+    // {
+    //     setRenderDrawColor(renderer, Color_Palette::GREY_LINES);
+    //     DrawCircle(renderer,
+    //               m_shape.x + m_shape.w / 2,
+    //               m_shape.y + m_shape.h / 2,
+    //                m_vision);
+    // }
 }
 
 void    Cell::setPos(Pos pos) {
     m_shape.x = pos.x;
     m_shape.y = pos.y;
+
+    // m_rect_shape.x = pos.x;
+    // m_rect_shape.y = pos.y;
     m_pos = pos;
 }
 
@@ -66,25 +71,25 @@ void    Cell::updateMovement() {
     if (m_others.empty())
     {
         setState(CellState::Default);
-        m_movement = {0, 0};
+        m_movement.setValues(0.0f, 0.0f);
         return ; // soon will need walk algo
     }
     auto other = std::min_element(m_others.begin(), m_others.end());
-    Vec2 dist = {other->second->getPos().x - this->m_pos.x,
-                other->second->getPos().y - this->m_pos.y};
-    if (m_type == CellType::Prey)
+    m_movement.setValues(other->second->getPos().x - this->m_pos.x,
+        other->second->getPos().y - this->m_pos.y);
+    // Vec2 tot(0, 0);
+    // for (auto cell : m_others) 
+    //     tot.setValues(cell.second->getPos().x + tot.x, cell.second->getPos().y + tot.y);
+    //  m_movement.setValues(tot.x / m_others.size(), tot.y / m_others.size());
+    if (m_type == CellType::Prey && other->second->getType() == CellType::Predator)
     {
-        if (dist.x < dist.y)
-            m_movement = {-1 * dist.x / dist.y, -1};
-        else
-            m_movement = {-1, -1 * dist.y / dist.x};
+        m_movement.normalize();
+        m_movement.inverse();
     }
-    else if (m_type == CellType::Predator)
+    else if (m_type == CellType::Predator && other->second->getType() == CellType::Prey)
     {
-        if (dist.x < dist.y)
-            m_movement = {1 * dist.x / dist.y, 1};
-        else
-            m_movement = {1, dist.y / dist.x};
+        m_movement.normalize();
+
     }
     // setPos(m_pos + m_movement);
     updatePos();
@@ -92,8 +97,8 @@ void    Cell::updateMovement() {
 }
 
 void    Cell::updatePos() {
-    m_pos.x += m_movement.x * Window_Config::SPEED;
-    m_pos.y += m_movement.y * Window_Config::SPEED;
+    m_pos.x += m_movement.x * m_speed * Window_Config::SPEED;
+    m_pos.y += m_movement.y * m_speed * Window_Config::SPEED;
     setPos(m_pos);
 }
 
@@ -115,8 +120,8 @@ std::vector<std::pair<float, Cell*>> Cell::getMap() const {
 
 void    Cell::setDebugShape() {
     m_debug = true;
-    m_debug_circle.x = m_shape.x + m_shape.w / 2;
-    m_debug_circle.y = m_shape.y + m_shape.h / 2;
+    // m_debug_circle.x = m_shape.x + m_shape.w / 2;
+    // m_debug_circle.y = m_shape.y + m_shape.h / 2;
     m_debug_circle.radius = m_vision;
 };
 

@@ -2,6 +2,7 @@
 #include "Cell.hpp"
 #include "config.h"
 #include "pch.h"
+#include <cassert>
 #include <cmath>
 #include <iterator>
 
@@ -47,65 +48,41 @@ void    Playground::update() {
     for (auto& cell : m_x_list)
         cell->emptyOthers();
     m_sortLists();
-    m_checkCollisions();
+    m_checkCollisions(m_x_list, 'x');
+    m_checkCollisions(m_y_list, 'y');
     for (auto& cell : m_x_list)
         cell->updateMovement();
 }
 
 
-void    Playground::m_checkCollisions(){
-
-    for (auto it = m_x_list.begin(); it != m_x_list.end(); ++it) {
+void    Playground::m_checkCollisions(std::list<Cell*> list, char axe){
+    assert(axe == 'x' || axe == 'y');
+    for (auto it = list.begin(); it != list.end(); ++it) {
         auto current = *it;
         auto forward_it = std::next(it);
 
-        while (forward_it != m_x_list.end()) {
+        while (forward_it != list.end()) {
             auto other = *forward_it;
-            if (other->getPos().x - current->getPos().x > current->getVision())
+            if ((axe == 'x' && other->getPos().x - current->getPos().x > current->getVision())
+                ||(axe == 'y' && other->getPos().y - current->getPos().y > current->getVision()))
                 break;
             setCollision(current, other);
             ++forward_it;
         }
-        if (it != m_x_list.begin()) {
+        if (it != list.begin()) {
             auto backward_it = std::prev(it);
             while (true) {
                 auto other = *backward_it;
-                if (current->getPos().x - other->getPos().x > current->getVision())
+                if ((axe == 'x' && current->getPos().x - other->getPos().x > current->getVision())
+                    || (axe == 'y' && current->getPos().y - other->getPos().y > current->getVision()))
                     break;
                 setCollision(current, other);
-                if (backward_it == m_x_list.begin())
+                if (backward_it == list.begin())
                     break;
                 --backward_it;
             }
         }
     }
-    for (auto it = m_y_list.begin(); it != m_y_list.end(); ++it) {
-        auto current = *it;
-
-        auto forward_it = std::next(it);
-        while (forward_it != m_y_list.end()) {
-            auto other = *forward_it;
-            if (other->getPos().y - current->getPos().y > current->getVision())
-                break;
-            setCollision(current, other);
-            ++forward_it;
-        }
-
-        if (it != m_y_list.begin()) {
-            auto backward_it = std::prev(it);
-            while (true) {
-                auto other = *backward_it;
-                if (current->getPos().y - other->getPos().y > current->getVision())
-                    break;
-                setCollision(current, other);
-                if (backward_it == m_y_list.begin())
-                    break;
-                --backward_it;
-            }
-        }
-    }
-    // check cells's states (maybe prey list / predator list)
-    // change pos
 }
 
 void    Playground::m_sortLists() {

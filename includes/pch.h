@@ -32,6 +32,7 @@ class Cell;
 void	setRenderDrawColor(SDL_Renderer *renderer, SDL_Color color);
 int     getRandomMultiple(int min, int max, int multiple);
 int     getRandomInt(int min, int max);
+float   getRandomFloat(float min, float max);
 Pos     getRandomPos();
 
 void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius);
@@ -45,8 +46,8 @@ void    setCollision(Cell *current, Cell *other);
 struct CellClass {
     CellType    type;
     SDL_Color   color;
-    int         speed[2];
-    int         vision[2];
+    float       speed[2];
+    float       vision[2];
 };
 
 struct SimConfig {

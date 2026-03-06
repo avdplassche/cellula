@@ -1,8 +1,5 @@
 #pragma once
 
-/** float x, y;
- */
-
 enum class CellType;
 struct SDL_Color;
 
@@ -24,10 +21,10 @@ struct GridSize {
   int col, row;
 };
 
-struct Vec2 {
-    float x, y;
-};
-
+// struct Vec2 {
+//     float x, y;
+// };
+//
 
 struct Pos {
     float x, y;
