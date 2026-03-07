@@ -1,8 +1,10 @@
 build/data/cell_types/predator.cpp.o: data/cell_types/predator.cpp \
   includes/config.h includes/Types.h includes/pch.h includes/Cell.hpp \
-  includes/Vec2.hpp
+  includes/App.hpp includes/Playground.hpp includes/Vec2.hpp
 includes/config.h:
 includes/Types.h:
 includes/pch.h:
 includes/Cell.hpp:
+includes/App.hpp:
+includes/Playground.hpp:
 includes/Vec2.hpp:

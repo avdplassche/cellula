@@ -33,7 +33,7 @@ void	setRenderDrawColor(SDL_Renderer *renderer, SDL_Color color);
 int     getRandomMultiple(int min, int max, int multiple);
 int     getRandomInt(int min, int max);
 float   getRandomFloat(float min, float max);
-Pos     getRandomPos();
+Pos     getRandomPos(AppConfig &);
 
 void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius);
 
@@ -50,10 +50,6 @@ struct CellClass {
     float       vision[2];
 };
 
-struct SimConfig {
-    int         prey_number;
-    int         predator_number;
-};
 
 ////    Configurations (to me moved)
 

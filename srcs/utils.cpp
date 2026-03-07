@@ -1,3 +1,4 @@
+#include "config.h"
 #include <cassert>
 #include <pch.h>
 
@@ -33,14 +34,14 @@ float getRandomFloat(float min, float max) {
 
 
 
-Pos    getRandomPos() {
+Pos    getRandomPos(AppConfig &config) {
     Pos p;
-    p.x = getRandomMultiple(Window_Config::PLAYGROUND_POS_X,
-                                  Window_Config::PLAYGROUND_POS_X + Window_Config::PLAYGROUND_WIDTH,
-                                  Window_Config::CELL_SIZE);
-    p.y = getRandomMultiple(Window_Config::PLAYGROUND_POS_Y,
-                                  Window_Config::PLAYGROUND_POS_Y + Window_Config::PLAYGROUND_HEIGHT,
-                                  Window_Config::CELL_SIZE);
+    p.x = getRandomMultiple(config.playground_pos.x + config.cell_size,
+                            config.playground_limit.x - config.cell_size,
+                            config.cell_size);
+    p.y = getRandomMultiple(config.playground_pos.y + config.cell_size,
+                            config.playground_limit.y + config.cell_size,
+                            config.cell_size);
     return p;
 }
 

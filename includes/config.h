@@ -3,35 +3,38 @@
 
 #include "Types.h"
 #include <SDL3/SDL.h>
+#include <string>
+#include <yaml-cpp/yaml.h>
 
-namespace Window_Config {
-	inline constexpr int WIDTH = 1920;
-	inline constexpr int HEIGHT = 1200;
-	inline constexpr const char* WINDOW_NAME = "Cellula";
-	inline constexpr int CELL_SIZE = 2;
-    inline constexpr int GRID_W = WIDTH / CELL_SIZE;
-	inline constexpr int GRID_H = HEIGHT / CELL_SIZE;
-    inline constexpr int MARGIN_X = 20;
-    inline constexpr int MARGIN_Y = 20;
-    inline constexpr int PLAYGROUND_WIDTH = WIDTH - MARGIN_X * 2;
-    inline constexpr int PLAYGROUND_HEIGHT = HEIGHT - MARGIN_Y * 2 - 26;
 
-	// inline constexpr int GRID_W = 1024 / CELL_SIZE;
-	// inline constexpr int GRID_H = 1024 / CELL_SIZE;
-	// inline constexpr int PLAYGROUND_WIDTH = GRID_W * CELL_SIZE;
-	// inline constexpr int PLAYGROUND_HEIGHT = GRID_H * CELL_SIZE;
-    inline constexpr int PLAYGROUND_POS_X = WIDTH / 2.0 - PLAYGROUND_WIDTH / 2.0;
-    inline constexpr int PLAYGROUND_POS_Y = HEIGHT / 2.0 - PLAYGROUND_HEIGHT / 2.0;
-    inline constexpr Size S_CELL_SIZE = {CELL_SIZE, CELL_SIZE};
 
-    inline constexpr float SPEED = 1.5;
+struct AppConfig {
+    float       window_width;
+    float       window_height;
+    std::string window_name;
 
-}
+    Pos         playground_margin;
+    FSize       playground_size;
+    Pos         playground_pos;
+    Pos         playground_limit;
 
-namespace Grid_Config {
+    float       cell_size;
+    FSize        s_cell_size;
 
-	inline constexpr int MARGIN = 50;
-}
+    //  Modifiables
+
+    float       simulation_speed;
+};
+
+struct SimConfig {
+    int         prey_number;
+    int         predator_number;
+};
+
+void    fillConfig(AppConfig&, YAML::Node&);
+void    printConfig(AppConfig&);
+
+
 
 namespace Color_Palette {
 	inline const SDL_Color MAIN_BACKGROUND = { 30,  30,  30, 255 };
@@ -43,10 +46,10 @@ namespace Color_Palette {
 	inline const SDL_Color TEXT	   = { 255, 255, 255, 255 };
 
 	inline const SDL_Color PLAIN    = { 160, 210, 45, 255 };
-    inline const SDL_Color FOREST   = {  55, 130,  55, 255 };
-    inline const SDL_Color ICE      = { 50, 135, 245, 255 };
-    inline const SDL_Color DESERT   = { 235, 150, 150, 255 };
-    inline const SDL_Color MOUNTAIN = { 140, 145, 160, 255 };
+	//    inline const SDL_Color FOREST   = {  55, 130,  55, 255 };
+	//    inline const SDL_Color ICE      = { 50, 135, 245, 255 };
+	inline const SDL_Color DESERT   = { 235, 150, 150, 255 };
+	//    inline const SDL_Color MOUNTAIN = { 140, 145, 160, 255 };
 
 	inline const SDL_Color PURPLE_CHARACTER = {170, 51, 106, 255};
 

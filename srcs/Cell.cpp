@@ -5,14 +5,14 @@
 
 
 
-Cell::Cell(int id, Pos origin, Size size, CellClass config): m_movement(0.0f, 0.0f) {
-    (void)size;
+Cell::Cell(int id, Pos origin, int size, CellClass config): m_movement(0.0f, 0.0f) {
+    m_size = size;
     cellCreationAssert(config);
     m_id = id;
     // float w = size.w;
     // float h = size.h;
     // m_rect_shape = {origin.x, origin.y, w, h};
-    m_shape = {origin.x, origin.y, Window_Config::CELL_SIZE};
+    m_shape = {origin.x, origin.y, m_size};
     m_type = config.type;
     m_speed = getRandomFloat(config.speed[0], config.speed[1]) / 100;
     m_vision = getRandomInt(config.vision[0], config.vision[1]);
@@ -26,7 +26,7 @@ Cell::~Cell() {}
 void    Cell::draw(SDL_Renderer* renderer) {
     setRenderDrawColor(renderer, m_color);
     // SDL_RenderFillRect(renderer, &m_rect_shape);
-    DrawCircle(renderer, m_shape.x, m_shape.y, Window_Config::CELL_SIZE);
+    DrawCircle(renderer, m_shape.x, m_shape.y, m_shape.radius);
     // if (m_debug)
     // {
     //     DrawCircle(renderer,
@@ -68,10 +68,38 @@ void    Cell::setOther(float distance, Cell* cell) {
 }
 
 void    Cell::updateMovement() {
+    float f = 0.005;
+    m_last_movement = {m_movement.x, m_movement.y};
     if (m_others.empty())
     {
         setState(CellState::Default);
-        m_movement.setValues(0.0f, 0.0f);
+        if (m_last_movement.x > 0)
+        {
+            m_last_movement.x -= f;
+            if (m_last_movement.x < 0)
+                m_last_movement.x = 0;
+        }
+        else
+        {
+            m_last_movement.x += f;
+            if (m_last_movement.x > 0)
+                m_last_movement.x = 0;
+        }
+        if (m_last_movement.y > 0)
+        {
+            m_last_movement.y -= f;
+            if (m_last_movement.y < 0)
+                m_last_movement.y = 0;
+        }
+        else
+        {
+            m_last_movement.y += f;
+            if (m_last_movement.y > 0)
+                m_last_movement.y = 0;
+        }
+
+        m_movement.setValues(m_last_movement.x, m_last_movement.y);
+        // m_movement.setValues(0.0f, 0.0f);
         return ; // soon will need walk algo
     }
     auto other = std::min_element(m_others.begin(), m_others.end());
@@ -86,24 +114,24 @@ void    Cell::updateMovement() {
     {
         m_movement.normalize();
     }
-    // setPos(m_pos + m_movement);
-    updatePos();
     setDebugShape();
 }
 
-void    Cell::updatePos() {
-    if (m_pos.x <= Window_Config::MARGIN_X || m_pos.x >= Window_Config::MARGIN_X + Window_Config::PLAYGROUND_WIDTH)
+void    Cell::updatePos(AppConfig& config) {
+    if (m_pos.x <= config.playground_margin.x
+        || m_pos.x >= config.playground_limit.x)
     {
         m_movement.x = 0;
         m_movement.y >= 0 ? m_movement.y = 1 : m_movement.y == -1;
     }
-    else if (m_pos.y <= Window_Config::MARGIN_Y || m_pos.y >= Window_Config::MARGIN_Y + Window_Config::PLAYGROUND_HEIGHT)
+    if (m_pos.y <= config.playground_margin.y 
+        || m_pos.y >= config.playground_limit.y)
     {
         m_movement.y = 0;
         m_movement.x >= 0 ? m_movement.x = 1 : m_movement.x == -1;
     }
-    m_pos.x += m_movement.x * m_speed * Window_Config::SPEED;
-    m_pos.y += m_movement.y * m_speed * Window_Config::SPEED;
+    m_pos.x += m_movement.x * m_speed * config.simulation_speed;
+    m_pos.y += m_movement.y * m_speed * config.simulation_speed;
     setPos(m_pos);
 }
 

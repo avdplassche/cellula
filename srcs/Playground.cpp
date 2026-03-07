@@ -2,33 +2,34 @@
 #include "Cell.hpp"
 #include "config.h"
 #include "pch.h"
+#include <SDL3/SDL_render.h>
 #include <cassert>
 #include <cmath>
 #include <iterator>
 
 
 
-Playground::Playground(SimConfig conf){ 
+Playground::Playground(AppConfig& app_config, SimConfig sim_config): m_app_config((app_config)){ 
 
-    m_container_rect.w = Window_Config::PLAYGROUND_WIDTH;
-    m_container_rect.h = Window_Config::PLAYGROUND_HEIGHT;
-    m_container_rect.x = Window_Config::PLAYGROUND_POS_X;
-    m_container_rect.y = Window_Config::PLAYGROUND_POS_Y;
-    m_cell_number = conf.predator_number + conf.prey_number;
+    m_container_rect.w = app_config.playground_size.w + app_config.cell_size * 2;
+    m_container_rect.h = app_config.playground_size.h + + app_config.cell_size * 2;
+    m_container_rect.x = app_config.playground_pos.x - app_config.cell_size;
+    m_container_rect.y = app_config.playground_pos.y - app_config.cell_size;
+    m_cell_number = sim_config.predator_number + sim_config.prey_number;
     int cell_id = 0;
 
-    for (int i = 0; i < conf.prey_number; i++)
+    for (int i = 0; i < sim_config.prey_number; i++)
     {
-        Cell *c = new Cell(cell_id, getRandomPos(),
-                           Window_Config::S_CELL_SIZE,
+        Cell *c = new Cell(cell_id, getRandomPos(m_app_config),
+                           app_config.cell_size,
                            preyConfig());
         m_x_list.push_back(c);
         m_y_list.push_back(c);
         cell_id++;
     }
-    for (int i = 0; i < conf.predator_number; i++){
-        Cell *c = new Cell(cell_id, getRandomPos(),
-                            Window_Config::S_CELL_SIZE,
+    for (int i = 0; i < sim_config.predator_number; i++){
+        Cell *c = new Cell(cell_id, getRandomPos(m_app_config),
+                           app_config.cell_size,
                             predatorConfig());
         m_x_list.push_back(c);
         m_y_list.push_back(c);
@@ -51,7 +52,10 @@ void    Playground::update() {
     m_checkCollisions(m_x_list, 'x');
     m_checkCollisions(m_y_list, 'y');
     for (auto& cell : m_x_list)
+    {
         cell->updateMovement();
+        cell->updatePos(m_app_config);
+    }
 }
 
 
@@ -99,6 +103,7 @@ void    Playground::m_sortLists() {
 void    Playground::draw(SDL_Renderer *renderer) {
     setRenderDrawColor(renderer, Color_Palette::GRID_LINES);
     SDL_RenderRect(renderer, &m_container_rect);
+
     for (auto &cell : m_x_list)
         cell->draw(renderer);
 }

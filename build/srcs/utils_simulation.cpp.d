@@ -1,8 +1,10 @@
 build/srcs/utils_simulation.cpp.o: srcs/utils_simulation.cpp \
-  includes/Cell.hpp includes/Types.h includes/Vec2.hpp includes/pch.h \
-  includes/config.h
+  includes/Cell.hpp includes/App.hpp includes/Playground.hpp \
+  includes/config.h includes/Types.h includes/pch.h includes/Vec2.hpp
 includes/Cell.hpp:
-includes/Types.h:
-includes/Vec2.hpp:
-includes/pch.h:
+includes/App.hpp:
+includes/Playground.hpp:
 includes/config.h:
+includes/Types.h:
+includes/pch.h:
+includes/Vec2.hpp:

@@ -6,17 +6,17 @@
 
 int main() {
 
-	App app;
+    AppConfig  app_config;
 	SDL_Event event;
-
-    YAML::Node config = YAML::LoadFile("config/config.yaml");
-    if (config.IsNull())
+    YAML::Node file_config = YAML::LoadFile("config/config.yaml");
+    if (file_config.IsNull())
     {
         std::cerr << "Error opening config file" << std::endl;
         return EXIT_FAILURE;
     }
+    fillConfig(app_config, file_config);
 
-    std::cout << config["window"]["width"]<< std::endl;
+    App app(app_config);
 	if (app.init() == -1)
 		return EXIT_FAILURE;
     std::cout << "App Initialized\n";

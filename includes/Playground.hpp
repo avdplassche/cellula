@@ -1,13 +1,14 @@
 #ifndef PLAYGROUND_HPP
 #define PLAYGROUND_HPP
 
+#include "config.h"
 #include "pch.h"
-#include "Cell.hpp"
+// #include "Cell.hpp"
 
 class Playground {
 
 public:
-    Playground(SimConfig conf);
+    Playground(AppConfig& app_config, SimConfig sim_config);
     ~Playground();
     void                draw(SDL_Renderer *renderer);
     void                update();
@@ -19,6 +20,7 @@ private:
     std::list<Cell*>    m_x_list;
     std::list<Cell*>    m_y_list;
     int                 m_cell_number;
+    AppConfig&          m_app_config;
 
 
     void                m_checkCollisions(std::list<Cell*>, char);

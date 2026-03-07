@@ -3,13 +3,14 @@ window:
   width: 1920
   height: 1200
   name: "Cellula"
-  cell_size: 2
-  margin:
-    x: 20
-    y: 20
-  speed: 1.5
 
-# Note: Les valeurs calculées (comme GRID_W ou PLAYGROUND_WIDTH) 
-# ne devraient généralement pas être stockées dans le YAML. 
-# Il est préférable de les calculer dans ton code C++ après 
-# avoir chargé les valeurs de base ci-dessus.
+playground:
+  margin:
+    - 20
+    - 20
+
+sim:
+  speed: 2
+
+cell:
+  size: 2

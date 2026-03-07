@@ -1,6 +1,8 @@
 #include "App.hpp"
+#include <SDL3/SDL_video.h>
 
-App::App(): m_playground(simulation_01()) {}
+
+App::App(AppConfig& config): m_config(config), m_playground(config, simulation_01()) {}
 
 App::~App() {
   SDL_DestroyWindow(m_window);
@@ -13,13 +15,17 @@ int App::init() {
         return -1;
     }
     std::cout << "SDL init\n";
-    m_window = SDL_CreateWindow(Window_Config::WINDOW_NAME, Window_Config::WIDTH,
-                                Window_Config::HEIGHT, SDL_WINDOW_RESIZABLE);
+    m_window = SDL_CreateWindow(m_config.window_name.c_str(), m_config.window_width,
+                                m_config.window_height, SDL_WINDOW_RESIZABLE);
     if (!m_window) {
         std::cout << SDL_GetError() << '\n';
         return -1;
     }
-    std::cout << "Window Created\n";
+    int window_h, window_w;
+    SDL_GetWindowSize(m_window, &window_h, &window_w);
+    std::cout << "Window Created : [" << window_w << "," << window_h << "]\n" ;
+    m_config.window_height = window_h;
+    m_config.window_width = window_w;
     m_renderer = SDL_CreateRenderer(m_window, NULL);
     if (!m_renderer) {
         std::cout << SDL_GetError() << '\n';

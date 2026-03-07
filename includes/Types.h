@@ -9,6 +9,13 @@ struct Size {
   int w, h;
 };
 
+/** int w, h;
+ */
+struct FSize {
+  float w, h;
+};
+
+
 /** int i, j;
  */
 struct GridIdx {
@@ -21,14 +28,8 @@ struct GridSize {
   int col, row;
 };
 
-// struct Vec2 {
-//     float x, y;
-// };
-//
-
 struct Pos {
     float x, y;
-    // Pos   operator+(Vec2& v) { return {x + v.x, y + v.y};};
 };
 
 struct SDL_Circle {

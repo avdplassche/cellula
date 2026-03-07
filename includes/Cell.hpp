@@ -1,8 +1,10 @@
 #ifndef CELL_HPP
 #define CELL_HPP
 
+#include "App.hpp"
 #include "Types.h"
 #include "Vec2.hpp"
+#include "config.h"
 #include "pch.h"
 #include <SDL3/SDL_mouse.h>
 
@@ -14,7 +16,7 @@ enum class CellState {Default, Escape, Attack};
 class Cell {
 
 public:
-    Cell(int id, Pos origin, Size size, CellClass config);
+    Cell(int id, Pos origin, int size, CellClass config);
     ~Cell();
 
     void    draw(SDL_Renderer* renderer);
@@ -22,7 +24,7 @@ public:
 
     void    emptyOthers();
     void    updateMovement();
-    void    updatePos();
+    void    updatePos(AppConfig&);
 
     void    setState(CellState);
     void    setOther(Cell*, CellType);
@@ -39,10 +41,13 @@ public:
 
 private:
     // SDL_FRect       m_rect_shape;
-    SDL_Circle       m_shape;
+    SDL_Circle      m_shape;
+    int             m_size;
 
     Pos             m_pos;
     Vec2            m_movement;
+    Pos             m_last_movement;
+    
 
     int             m_id;
     SDL_Color       m_color;
@@ -61,5 +66,4 @@ private:
 
 };
 
-#endif // !ve
-
+#endif 

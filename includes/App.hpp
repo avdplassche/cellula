@@ -2,12 +2,13 @@
 #define APP_HPP
 
 #include "Playground.hpp"
+#include "config.h"
 #include "pch.h"
 
 class App {
 
 public:
-    App();
+    App(AppConfig&);
     ~App();
 
     int             init();
@@ -17,7 +18,8 @@ public:
     SDL_Window      *getWindow();
     SDL_Renderer    *getRenderer();
 
-    private:
+private:
+    AppConfig&      m_config;
     SDL_Window      *m_window = NULL;
     SDL_Renderer    *m_renderer = NULL;
     Playground      m_playground;
