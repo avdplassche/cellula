@@ -1,22 +1,29 @@
+#include "config.h"
 #include <cstdlib>
 #include <pch.h>
 #include <App.hpp>
 #include <type_traits>
+#include <vector>
+#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 
 int main() {
 
-    AppConfig  app_config;
 	SDL_Event event;
-    YAML::Node file_config = YAML::LoadFile("config/config.yaml");
-    if (file_config.IsNull())
+    YAML::Node app_file_config = YAML::LoadFile("config/config.yaml");
+    if (app_file_config.IsNull())
     {
         std::cerr << "Error opening config file" << std::endl;
         return EXIT_FAILURE;
     }
-    fillConfig(app_config, file_config);
 
-    App app(app_config);
+    YAML::Node sim_file_config = YAML::LoadFile("config/simulations.yaml");
+
+    // AppConfig  app_config;
+
+    // fillAppConfig(app_file_config, app_config);
+    App app(app_file_config, sim_file_config);
 	if (app.init() == -1)
 		return EXIT_FAILURE;
     std::cout << "App Initialized\n";

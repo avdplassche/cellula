@@ -9,6 +9,7 @@
 
 
 struct AppConfig {
+
     float       window_width;
     float       window_height;
     std::string window_name;
@@ -27,11 +28,14 @@ struct AppConfig {
 };
 
 struct SimConfig {
-    int         prey_number;
-    int         predator_number;
+    int         id = 0;
+    std::string name = "";
+    int         prey_number = 0;
+    int         predator_number = 0;
 };
 
-void    fillConfig(AppConfig&, YAML::Node&);
+void    fillAppConfig(YAML::Node&, AppConfig&);
+void    fillSimConfig(YAML::Node&, std::vector<SimConfig>&);
 void    printConfig(AppConfig&);
 
 

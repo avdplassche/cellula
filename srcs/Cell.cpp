@@ -67,8 +67,8 @@ void    Cell::setOther(float distance, Cell* cell) {
     m_others.push_back({distance, cell});
 }
 
-void    Cell::updateMovement() {
-    float f = 0.005;
+void    Cell::updateMovement(AppConfig& config) {
+    float f = 0.005; // friction
     m_last_movement = {m_movement.x, m_movement.y};
     if (m_others.empty())
     {
@@ -102,6 +102,11 @@ void    Cell::updateMovement() {
         // m_movement.setValues(0.0f, 0.0f);
         return ; // soon will need walk algo
     }
+    if (m_type == CellType::Prey && m_pos.x <= config.playground_pos.x + 1)
+    {
+        m_movement.setValues(1, 0);
+        return;
+    }
     auto other = std::min_element(m_others.begin(), m_others.end());
     m_movement.setValues(other->second->getPos().x - this->m_pos.x,
         other->second->getPos().y - this->m_pos.y);
@@ -118,6 +123,7 @@ void    Cell::updateMovement() {
 }
 
 void    Cell::updatePos(AppConfig& config) {
+    //  4 corners
     if (m_pos.x <= config.playground_margin.x
         || m_pos.x >= config.playground_limit.x)
     {

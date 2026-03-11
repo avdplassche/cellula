@@ -9,8 +9,32 @@
 
 
 
-Playground::Playground(AppConfig& app_config, SimConfig sim_config): m_app_config((app_config)){ 
+// Playground::Playground(AppConfig& app_config, SimConfig sim_config): m_app_config((app_config)){ 
+//
+// }
 
+
+Playground::Playground(){}
+
+
+Playground::~Playground(){
+    for (auto &c : m_x_list)
+    {
+        delete c;
+    }
+}
+
+void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfig& sim_config) {
+    m_app_config = app_config;
+    std::cout << "Nb Predators : " <<   sim_config.predator_number << '\n';
+    std::cout << "Nb Preys : " <<   sim_config.prey_number << '\n';
+    m_renderer = renderer;
+    m_texture = SDL_CreateTexture(renderer,
+                                  SDL_PIXELFORMAT_RGBA8888,
+                                  SDL_TEXTUREACCESS_TARGET,
+                                  m_size.w,
+                                  m_size.h);
+    m_size = app_config.playground_size;
     m_container_rect.w = app_config.playground_size.w + app_config.cell_size * 2;
     m_container_rect.h = app_config.playground_size.h + + app_config.cell_size * 2;
     m_container_rect.x = app_config.playground_pos.x - app_config.cell_size;
@@ -35,14 +59,8 @@ Playground::Playground(AppConfig& app_config, SimConfig sim_config): m_app_confi
         m_y_list.push_back(c);
         cell_id++;
     }
-    update();
-}
 
-Playground::~Playground(){
-    for (auto &c : m_x_list)
-    {
-        delete c;
-    }
+    update();
 }
 
 void    Playground::update() {
@@ -53,7 +71,7 @@ void    Playground::update() {
     m_checkCollisions(m_y_list, 'y');
     for (auto& cell : m_x_list)
     {
-        cell->updateMovement();
+        cell->updateMovement(m_app_config);
         cell->updatePos(m_app_config);
     }
 }
@@ -100,12 +118,16 @@ void    Playground::m_sortLists() {
 }
 
 
-void    Playground::draw(SDL_Renderer *renderer) {
-    setRenderDrawColor(renderer, Color_Palette::GRID_LINES);
-    SDL_RenderRect(renderer, &m_container_rect);
+void    Playground::draw() {
+    SDL_SetRenderTarget(m_renderer, m_texture);
+    SDL_RenderClear(m_renderer);
+    setRenderDrawColor(m_renderer, Color_Palette::GRID_LINES);
+    SDL_RenderRect(m_renderer, &m_container_rect);
 
     for (auto &cell : m_x_list)
-        cell->draw(renderer);
+        cell->draw(m_renderer);
+    SDL_SetRenderTarget(m_renderer, NULL);
+    SDL_RenderTexture(m_renderer, m_texture, NULL, NULL);
 }
 
 

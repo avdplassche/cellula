@@ -1,0 +1,8 @@
+
+simulations:
+  - name: "Basic simulation"
+    cell:
+      - type: "Predators"
+        n : 1000
+      - type: "Prey"
+        n : 1000

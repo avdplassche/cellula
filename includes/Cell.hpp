@@ -23,7 +23,7 @@ public:
     void    setPos(Pos pos);
 
     void    emptyOthers();
-    void    updateMovement();
+    void    updateMovement(AppConfig&);
     void    updatePos(AppConfig&);
 
     void    setState(CellState);

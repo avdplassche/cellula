@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-void    fillConfig(AppConfig& app, YAML::Node& file) {
+void    fillAppConfig(YAML::Node& file, AppConfig& app) {
 
     app.window_height = file["window"]["height"].as<float>() - 26;
     app.window_width = file["window"]["width"].as<float>();
@@ -25,6 +25,30 @@ void    fillConfig(AppConfig& app, YAML::Node& file) {
     printConfig(app);
 }
 
+
+void    fillSimConfig(YAML::Node& file, std::vector<SimConfig>& simulations) {
+    const YAML::Node& sims = file["simulations"];
+    int i = 1;
+    std::cout << "Starting FillSim\n";
+
+    for (auto &sim : sims)
+    {
+        std::cout << "Sim " << i << '\n';
+        SimConfig conf;
+
+        conf.id = i;
+        conf.name = sim["name"].as<std::string>();
+        const YAML::Node& types = sim["cell"];
+        for (auto& cell : types) {
+            if (cell["type"].as<std::string>() == "Predators")
+                conf.predator_number = cell["n"].as<int>();
+            else if (cell["type"].as<std::string>() == "Prey")
+                conf.prey_number = cell["n"].as<int>();
+        }
+        simulations.push_back(conf);
+        i++;
+    }
+}
 
 
 void    printConfig(AppConfig& conf) {

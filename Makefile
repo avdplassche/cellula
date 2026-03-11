@@ -52,9 +52,10 @@ $(BUILDDIR)/%.o: %
 
 clean:
 	@echo "Cleaning build artifacts..."
-	@rm -rf $(BUILDDIR) $(NAME)
+	@rm -rf $(BUILDDIR)
 
 fclean: clean
+	@rm -rf $(NAME)
 
 re: fclean all
 

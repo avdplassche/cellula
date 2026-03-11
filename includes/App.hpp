@@ -3,12 +3,13 @@
 
 #include "Playground.hpp"
 #include "config.h"
-#include "pch.h"
+#include <vector>
+#include <yaml-cpp/node/node.h>
 
 class App {
 
 public:
-    App(AppConfig&);
+    App(YAML::Node& app_yaml, YAML::Node& sim_yaml);
     ~App();
 
     int             init();
@@ -19,11 +20,12 @@ public:
     SDL_Renderer    *getRenderer();
 
 private:
-    AppConfig&      m_config;
+    int             m_selected_config = 0;
+    AppConfig       m_config;
     SDL_Window      *m_window = NULL;
     SDL_Renderer    *m_renderer = NULL;
     Playground      m_playground;
-
+    std::vector<SimConfig>  m_sim_configs;
 
 };
 #endif
