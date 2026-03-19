@@ -39,6 +39,7 @@ void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int
 
 
 void    setCollision(Cell *current, Cell *other);
+void    normalizeFriction(Pos *movement, float f);
 
 
 ////    Structures

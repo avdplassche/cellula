@@ -8,8 +8,6 @@ App::App(YAML::Node& app_yaml, YAML::Node& sim_yaml) {
     fillAppConfig(app_yaml, m_config);
     m_sim_configs.reserve(sim_yaml["simulations"].size());
     fillSimConfig(sim_yaml, m_sim_configs);
-    std::cout << "Nb Predators : " <<   m_sim_configs[0].predator_number << '\n';
-    std::cout << "Nb Preys : " <<   m_sim_configs[0].prey_number << '\n';
 }
 
 App::~App() {
@@ -43,7 +41,6 @@ void App::update() {
 }
 
 void App::render() {
-
     setRenderDrawColor(m_renderer, Color_Palette::MAIN_BACKGROUND);
     SDL_RenderClear(m_renderer);
     m_playground.draw();

@@ -25,6 +25,9 @@ struct AppConfig {
     //  Modifiables
 
     float       simulation_speed;
+    float       f; //friction
+    float       f_ratio;
+    float       f_time;
 };
 
 struct SimConfig {

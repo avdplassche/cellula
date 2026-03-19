@@ -7,13 +7,6 @@
 #include <cmath>
 #include <iterator>
 
-
-
-// Playground::Playground(AppConfig& app_config, SimConfig sim_config): m_app_config((app_config)){ 
-//
-// }
-
-
 Playground::Playground(){}
 
 
@@ -44,7 +37,7 @@ void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfi
 
     for (int i = 0; i < sim_config.prey_number; i++)
     {
-        Cell *c = new Cell(cell_id, getRandomPos(m_app_config),
+        Cell *c = new Cell(app_config, cell_id, getRandomPos(m_app_config),
                            app_config.cell_size,
                            preyConfig());
         m_x_list.push_back(c);
@@ -52,7 +45,7 @@ void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfi
         cell_id++;
     }
     for (int i = 0; i < sim_config.predator_number; i++){
-        Cell *c = new Cell(cell_id, getRandomPos(m_app_config),
+        Cell *c = new Cell(app_config, cell_id, getRandomPos(m_app_config),
                            app_config.cell_size,
                             predatorConfig());
         m_x_list.push_back(c);
@@ -111,7 +104,6 @@ void    Playground::m_sortLists() {
     m_x_list.sort([](const Cell* c1, const Cell* c2){
         return (c1->getPos().x < c2->getPos().x);
     });
-
     m_y_list.sort([](const Cell* c1, const Cell* c2){
         return (c1->getPos().y < c2->getPos().y);
     });
@@ -123,13 +115,11 @@ void    Playground::draw() {
     SDL_RenderClear(m_renderer);
     setRenderDrawColor(m_renderer, Color_Palette::GRID_LINES);
     SDL_RenderRect(m_renderer, &m_container_rect);
-
     for (auto &cell : m_x_list)
         cell->draw(m_renderer);
     SDL_SetRenderTarget(m_renderer, NULL);
     SDL_RenderTexture(m_renderer, m_texture, NULL, NULL);
 }
-
 
 
 void    printCellXContainer(std::list<Cell *>& list) {
@@ -147,8 +137,6 @@ void    printCellXContainer(std::list<Cell *>& list) {
     
     std::cout << " ]" << std::endl;
 }
-
-
 
 
 

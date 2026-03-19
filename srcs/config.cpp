@@ -21,6 +21,9 @@ void    fillAppConfig(YAML::Node& file, AppConfig& app) {
     app.s_cell_size = {app.cell_size, app.cell_size};
 
     app.simulation_speed = file["sim"]["speed"].as<float>();
+    app.f = file["sim"]["cell_friction"].as<float>();
+    app.f_ratio = file["sim"]["friction_ratio"].as<float>();
+    app.f_time = file["sim"]["friction_time"].as<float>();
 
     printConfig(app);
 }

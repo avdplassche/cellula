@@ -16,7 +16,7 @@ enum class CellState {Default, Escape, Attack};
 class Cell {
 
 public:
-    Cell(int id, Pos origin, int size, CellClass config);
+    Cell(AppConfig&, int id, Pos origin, int size, CellClass config);
     ~Cell();
 
     void    draw(SDL_Renderer* renderer);
@@ -47,6 +47,7 @@ private:
     Pos             m_pos;
     Vec2            m_movement;
     Pos             m_last_movement;
+    float           m_friction;
     
 
     int             m_id;
@@ -61,9 +62,10 @@ private:
     std::vector<std::pair<float, Cell*>> m_others;
 
 
-    SDL_Circle  m_debug_circle;
-    bool        m_debug = false;
+    SDL_Circle      m_debug_circle;
+    bool            m_debug = false;
 
+    void            mUpdateSoloRoutine(AppConfig& config);
 };
 
 #endif 

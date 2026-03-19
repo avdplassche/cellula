@@ -6,3 +6,9 @@ simulations:
         n : 1000
       - type: "Prey"
         n : 1000
+  - name: "1vs1"
+    cell:
+      - type: "Predators"
+        n : 1
+      - type : "Prey"
+        n : 1

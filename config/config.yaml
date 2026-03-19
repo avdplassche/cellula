@@ -11,6 +11,8 @@ playground:
 
 sim:
   speed: 2
-
+  cell_friction: 0.05
+  friction_ratio: 1.1
+  friction_time: 700.0
 cell:
-  size: 2
+  size: 3

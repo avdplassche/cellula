@@ -32,8 +32,6 @@ float getRandomFloat(float min, float max) {
     return std::uniform_real_distribution<float>(min, max)(gen);
 }
 
-
-
 Pos    getRandomPos(AppConfig &config) {
     Pos p;
     p.x = getRandomMultiple(config.playground_pos.x + config.cell_size,
@@ -68,6 +66,7 @@ void DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_
         SDL_RenderPoint(renderer, centerX + y, centerY + x);
         SDL_RenderPoint(renderer, centerX - y, centerY - x);
         SDL_RenderPoint(renderer, centerX - y, centerY + x);
+
 
         if (error <= 0) {
             y++;

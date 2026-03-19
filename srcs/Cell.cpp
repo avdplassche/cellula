@@ -2,23 +2,25 @@
 #include "config.h"
 #include "pch.h"
 #include <algorithm>
+#include <iomanip>
 
 
 
-Cell::Cell(int id, Pos origin, int size, CellClass config): m_movement(0.0f, 0.0f) {
+Cell::Cell(AppConfig& appConfig, int id, Pos origin, int size, CellClass cellConfig): m_movement(0.0f, 0.0f) {
     m_size = size;
-    cellCreationAssert(config);
+    cellCreationAssert(cellConfig);
     m_id = id;
     // float w = size.w;
     // float h = size.h;
     // m_rect_shape = {origin.x, origin.y, w, h};
     m_shape = {origin.x, origin.y, m_size};
-    m_type = config.type;
-    m_speed = getRandomFloat(config.speed[0], config.speed[1]) / 100;
-    m_vision = getRandomInt(config.vision[0], config.vision[1]);
+    m_type = cellConfig.type;
+    m_speed = getRandomFloat(cellConfig.speed[0], cellConfig.speed[1]) / 100;
+    m_vision = getRandomInt(cellConfig.vision[0], cellConfig.vision[1]);
     m_pos = origin;
-    m_color = config.color;
+    m_color = cellConfig.color;
     m_movement = {0,0};
+    m_friction = appConfig.f;
 }
 
 Cell::~Cell() {}
@@ -68,38 +70,11 @@ void    Cell::setOther(float distance, Cell* cell) {
 }
 
 void    Cell::updateMovement(AppConfig& config) {
-    float f = 0.005; // friction
     m_last_movement = {m_movement.x, m_movement.y};
     if (m_others.empty())
     {
-        setState(CellState::Default);
-        if (m_last_movement.x > 0)
-        {
-            m_last_movement.x -= f;
-            if (m_last_movement.x < 0)
-                m_last_movement.x = 0;
-        }
-        else
-        {
-            m_last_movement.x += f;
-            if (m_last_movement.x > 0)
-                m_last_movement.x = 0;
-        }
-        if (m_last_movement.y > 0)
-        {
-            m_last_movement.y -= f;
-            if (m_last_movement.y < 0)
-                m_last_movement.y = 0;
-        }
-        else
-        {
-            m_last_movement.y += f;
-            if (m_last_movement.y > 0)
-                m_last_movement.y = 0;
-        }
 
-        m_movement.setValues(m_last_movement.x, m_last_movement.y);
-        // m_movement.setValues(0.0f, 0.0f);
+        mUpdateSoloRoutine(config);
         return ; // soon will need walk algo
     }
     if (m_type == CellType::Prey && m_pos.x <= config.playground_pos.x + 1)
@@ -122,8 +97,57 @@ void    Cell::updateMovement(AppConfig& config) {
     setDebugShape();
 }
 
+void    Cell::mUpdateSoloRoutine(AppConfig& config) {
+
+    // set the friction to max if the cell had a state
+    if (m_state != CellState::Default)
+    {
+        m_friction = config.f;
+        setState(CellState::Default);
+    }
+    normalizeFriction(&m_last_movement, m_friction);
+    // if (m_last_movement.x > 0)
+    // {
+    //     m_last_movement.x -= m_friction;
+    //     if (m_last_movement.x < 0)
+    //         m_last_movement.x = 0;
+    // }
+    // else if (m_last_movement.x < 0)
+    // {
+    //     m_last_movement.x += m_friction;
+    //     if (m_last_movement.x > 0)
+    //         m_last_movement.x = 0;
+    // }
+    // if (m_last_movement.y > 0)
+    // {
+    //     m_last_movement.y -= m_friction;
+    //     if (m_last_movement.y < 0)
+    //         m_last_movement.y = 0;
+    // }
+    // else if (m_last_movement.y < 0)
+    // {
+    //     m_last_movement.y += m_friction;
+    //     if (m_last_movement.y > 0)
+    //         m_last_movement.y = 0;
+    // }
+    //
+    m_movement.setValues(m_last_movement.x, m_last_movement.y);
+    m_friction /= config.f_ratio;
+    // m_friction -= m_friction / config.f_time;
+    // if (m_friction < 0)
+    if (m_friction < config.f / config.f_time)
+        m_friction = 0;
+    if (m_type == CellType::Predator)
+        return;
+    std::cout << "State : " << (int)m_state << '\n';
+    std::cout << "Friction : " << std::setprecision(8) << m_friction << '\n';
+    std::cout << "Movement : [" << std::setprecision(8)<< m_last_movement.x << ','<< m_last_movement.y << "]\n";
+    // m_movement.setValues(0.0f, 0.0f);
+}
+
+
+
 void    Cell::updatePos(AppConfig& config) {
-    //  4 corners
     if (m_pos.x <= config.playground_margin.x
         || m_pos.x >= config.playground_limit.x)
     {
