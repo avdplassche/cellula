@@ -25,6 +25,7 @@ class Cell;
 
 #include "config.h"
 #include "Types.h"
+#include "Vec2.hpp"
 
 ////    Utils
 
@@ -37,10 +38,17 @@ Pos     getRandomPos(AppConfig &);
 
 void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius);
 
+////    SimulationUtils
+
+enum class  Corner {NW,NE, SW, SE};
+enum class  Side {N, S, W, E};
 
 void    setCollision(Cell *current, Cell *other);
 void    normalizeFriction(Pos *movement, float f);
-
+bool    checkCorners(AppConfig& config, Pos* pos,  Corner &corner);
+void    handleCellCorners(AppConfig &config, Vec2 *movement, std::vector<std::pair<float, Cell*>>& others, Corner &c);
+bool    checkLimits(AppConfig& config, Pos *pos, Side &side);
+void    handleCellLimits(AppConfig &config, Vec2 *movement, std::vector<std::pair<float, Cell*>>& others, Side &s);
 
 ////    Structures
 

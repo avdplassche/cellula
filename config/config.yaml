@@ -1,7 +1,7 @@
 # config.yaml
 window:
   width: 1920
-  height: 1200
+  height: 1080
   name: "Cellula"
 
 playground:
@@ -15,4 +15,4 @@ sim:
   friction_ratio: 1.1
   friction_time: 700.0
 cell:
-  size: 3
+  size: 2

@@ -4,10 +4,18 @@
 #include <yaml-cpp/node/node.h>
 
 
-App::App(YAML::Node& app_yaml, YAML::Node& sim_yaml) {
+App::App(std::string arg, YAML::Node& app_yaml, YAML::Node& sim_yaml) {
     fillAppConfig(app_yaml, m_config);
+    m_config.simulation_name = arg;
     m_sim_configs.reserve(sim_yaml["simulations"].size());
     fillSimConfig(sim_yaml, m_sim_configs);
+    int i = 0;
+    for (auto& conf : m_sim_configs)
+    {
+        if (arg == conf.name)
+            m_selected_config = i;
+        i++;
+    }
 }
 
 App::~App() {

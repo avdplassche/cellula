@@ -4,7 +4,6 @@
 #include "pch.h"
 #include <SDL3/SDL_render.h>
 #include <cassert>
-#include <cmath>
 #include <iterator>
 
 Playground::Playground(){}
@@ -12,9 +11,7 @@ Playground::Playground(){}
 
 Playground::~Playground(){
     for (auto &c : m_x_list)
-    {
         delete c;
-    }
 }
 
 void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfig& sim_config) {
@@ -63,10 +60,13 @@ void    Playground::update() {
     m_checkCollisions(m_x_list, 'x');
     m_checkCollisions(m_y_list, 'y');
     for (auto& cell : m_x_list)
-    {
         cell->updateMovement(m_app_config);
+    for (auto& cell : m_x_list)
+        cell->checkMovementsLimits(m_app_config);
+    for (auto& cell : m_x_list)
+        cell->checkMovementsCollisions(m_app_config);
+    for (auto& cell : m_x_list)
         cell->updatePos(m_app_config);
-    }
 }
 
 

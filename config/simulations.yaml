@@ -10,5 +10,10 @@ simulations:
     cell:
       - type: "Predators"
         n : 1
+        from_pos : [10,10]
+        to_pos : [11,11]
       - type : "Prey"
         n : 1
+        from_pos : [30,30]
+        to_pos : [31,31]
+

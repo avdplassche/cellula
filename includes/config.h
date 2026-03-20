@@ -20,10 +20,9 @@ struct AppConfig {
     Pos         playground_limit;
 
     float       cell_size;
-    FSize        s_cell_size;
+    FSize       s_cell_size;
 
-    //  Modifiables
-
+    std::string simulation_name;
     float       simulation_speed;
     float       f; //friction
     float       f_ratio;
@@ -40,7 +39,6 @@ struct SimConfig {
 void    fillAppConfig(YAML::Node&, AppConfig&);
 void    fillSimConfig(YAML::Node&, std::vector<SimConfig>&);
 void    printConfig(AppConfig&);
-
 
 
 namespace Color_Palette {

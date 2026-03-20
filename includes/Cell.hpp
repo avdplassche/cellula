@@ -24,6 +24,8 @@ public:
 
     void    emptyOthers();
     void    updateMovement(AppConfig&);
+    void    checkMovementsLimits(AppConfig&);
+    void    checkMovementsCollisions(AppConfig&);
     void    updatePos(AppConfig&);
 
     void    setState(CellState);
@@ -40,7 +42,6 @@ public:
     void    setDebugShape();
 
 private:
-    // SDL_FRect       m_rect_shape;
     SDL_Circle      m_shape;
     int             m_size;
 
@@ -66,6 +67,7 @@ private:
     bool            m_debug = false;
 
     void            mUpdateSoloRoutine(AppConfig& config);
+    void            mUpdateDependentRoutine();
 };
 
 #endif 

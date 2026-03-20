@@ -10,9 +10,6 @@ Cell::Cell(AppConfig& appConfig, int id, Pos origin, int size, CellClass cellCon
     m_size = size;
     cellCreationAssert(cellConfig);
     m_id = id;
-    // float w = size.w;
-    // float h = size.h;
-    // m_rect_shape = {origin.x, origin.y, w, h};
     m_shape = {origin.x, origin.y, m_size};
     m_type = cellConfig.type;
     m_speed = getRandomFloat(cellConfig.speed[0], cellConfig.speed[1]) / 100;
@@ -27,31 +24,13 @@ Cell::~Cell() {}
 
 void    Cell::draw(SDL_Renderer* renderer) {
     setRenderDrawColor(renderer, m_color);
-    // SDL_RenderFillRect(renderer, &m_rect_shape);
+
     DrawCircle(renderer, m_shape.x, m_shape.y, m_shape.radius);
-    // if (m_debug)
-    // {
-    //     DrawCircle(renderer,
-    //                m_debug_circle.x,
-    //                m_debug_circle.y,
-    //                m_debug_circle.radius);
-    // }
-    // else
-    // {
-    //     setRenderDrawColor(renderer, Color_Palette::GREY_LINES);
-    //     DrawCircle(renderer,
-    //               m_shape.x,
-    //               m_shape.y,
-    //                m_vision);
-    // }
 }
 
 void    Cell::setPos(Pos pos) {
     m_shape.x = pos.x;
     m_shape.y = pos.y;
-
-    // m_rect_shape.x = pos.x;
-    // m_rect_shape.y = pos.y;
     m_pos = pos;
 }
 
@@ -69,33 +48,35 @@ void    Cell::setOther(float distance, Cell* cell) {
     m_others.push_back({distance, cell});
 }
 
+//// Playground Update
+
 void    Cell::updateMovement(AppConfig& config) {
     m_last_movement = {m_movement.x, m_movement.y};
     if (m_others.empty())
-    {
-
         mUpdateSoloRoutine(config);
-        return ; // soon will need walk algo
-    }
-    if (m_type == CellType::Prey && m_pos.x <= config.playground_pos.x + 1)
-    {
-        m_movement.setValues(1, 0);
-        return;
-    }
-    auto other = std::min_element(m_others.begin(), m_others.end());
-    m_movement.setValues(other->second->getPos().x - this->m_pos.x,
-        other->second->getPos().y - this->m_pos.y);
-    if (m_type == CellType::Prey && other->second->getType() == CellType::Predator)
-    {
-        m_movement.normalize();
-        m_movement.inverse();
-    }
-    else if (m_type == CellType::Predator && other->second->getType() == CellType::Prey)
-    {
-        m_movement.normalize();
-    }
-    setDebugShape();
+    else 
+        mUpdateDependentRoutine();
 }
+
+void    Cell::checkMovementsLimits(AppConfig& config) {
+    Corner corner;
+    Side side;
+    if (checkCorners(config, &m_pos, corner))
+        handleCellCorners(config, &m_movement, m_others, corner);
+    else if (checkLimits(config, &m_pos, side))
+        handleCellLimits(config, &m_movement, m_others, side);
+}
+
+void    Cell::checkMovementsCollisions(AppConfig& config) {
+    (void)config;
+}
+
+void    Cell::updatePos(AppConfig& config) {
+    m_pos.x += m_movement.x * m_speed * config.simulation_speed;
+    m_pos.y += m_movement.y * m_speed * config.simulation_speed;
+    setPos(m_pos);
+}
+
 
 void    Cell::mUpdateSoloRoutine(AppConfig& config) {
 
@@ -106,63 +87,27 @@ void    Cell::mUpdateSoloRoutine(AppConfig& config) {
         setState(CellState::Default);
     }
     normalizeFriction(&m_last_movement, m_friction);
-    // if (m_last_movement.x > 0)
-    // {
-    //     m_last_movement.x -= m_friction;
-    //     if (m_last_movement.x < 0)
-    //         m_last_movement.x = 0;
-    // }
-    // else if (m_last_movement.x < 0)
-    // {
-    //     m_last_movement.x += m_friction;
-    //     if (m_last_movement.x > 0)
-    //         m_last_movement.x = 0;
-    // }
-    // if (m_last_movement.y > 0)
-    // {
-    //     m_last_movement.y -= m_friction;
-    //     if (m_last_movement.y < 0)
-    //         m_last_movement.y = 0;
-    // }
-    // else if (m_last_movement.y < 0)
-    // {
-    //     m_last_movement.y += m_friction;
-    //     if (m_last_movement.y > 0)
-    //         m_last_movement.y = 0;
-    // }
-    //
     m_movement.setValues(m_last_movement.x, m_last_movement.y);
     m_friction /= config.f_ratio;
-    // m_friction -= m_friction / config.f_time;
-    // if (m_friction < 0)
     if (m_friction < config.f / config.f_time)
         m_friction = 0;
-    if (m_type == CellType::Predator)
-        return;
-    std::cout << "State : " << (int)m_state << '\n';
-    std::cout << "Friction : " << std::setprecision(8) << m_friction << '\n';
-    std::cout << "Movement : [" << std::setprecision(8)<< m_last_movement.x << ','<< m_last_movement.y << "]\n";
-    // m_movement.setValues(0.0f, 0.0f);
 }
 
-
-
-void    Cell::updatePos(AppConfig& config) {
-    if (m_pos.x <= config.playground_margin.x
-        || m_pos.x >= config.playground_limit.x)
+void    Cell::mUpdateDependentRoutine(){
+    auto other = std::min_element(m_others.begin(), m_others.end());
+    m_movement.setValues(other->second->getPos().x - this->m_pos.x,
+        other->second->getPos().y - this->m_pos.y);
+    if (m_type == CellType::Prey && other->second->getType() == CellType::Predator)
     {
-        m_movement.x = 0;
-        m_movement.y >= 0 ? m_movement.y = 1 : m_movement.y == -1;
+        m_movement.normalize();
+        m_movement.inverse();
+        m_state = CellState::Escape;
     }
-    if (m_pos.y <= config.playground_margin.y 
-        || m_pos.y >= config.playground_limit.y)
+    else if (m_type == CellType::Predator && other->second->getType() == CellType::Prey)
     {
-        m_movement.y = 0;
-        m_movement.x >= 0 ? m_movement.x = 1 : m_movement.x == -1;
+        m_movement.normalize();
+        m_state = CellState::Attack;
     }
-    m_pos.x += m_movement.x * m_speed * config.simulation_speed;
-    m_pos.y += m_movement.y * m_speed * config.simulation_speed;
-    setPos(m_pos);
 }
 
 

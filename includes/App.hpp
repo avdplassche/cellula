@@ -9,7 +9,7 @@
 class App {
 
 public:
-    App(YAML::Node& app_yaml, YAML::Node& sim_yaml);
+    App(std::string argv, YAML::Node& app_yaml, YAML::Node& sim_yaml);
     ~App();
 
     int             init();

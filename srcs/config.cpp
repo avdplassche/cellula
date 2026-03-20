@@ -2,7 +2,6 @@
 #include "Types.h"
 #include <iostream>
 
-
 void    fillAppConfig(YAML::Node& file, AppConfig& app) {
 
     app.window_height = file["window"]["height"].as<float>() - 26;
@@ -27,7 +26,6 @@ void    fillAppConfig(YAML::Node& file, AppConfig& app) {
 
     printConfig(app);
 }
-
 
 void    fillSimConfig(YAML::Node& file, std::vector<SimConfig>& simulations) {
     const YAML::Node& sims = file["simulations"];

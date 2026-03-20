@@ -1,4 +1,6 @@
 #include "config.h"
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_scancode.h>
 #include <cstdlib>
 #include <pch.h>
 #include <App.hpp>
@@ -8,9 +10,15 @@
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 
-int main() {
+int main(int argc, char **argv) {
 
 	SDL_Event event;
+    std::string arg;
+    if (argc == 2)
+        arg = argv[1];
+    else
+        arg = "";
+
     YAML::Node app_file_config = YAML::LoadFile("config/config.yaml");
     if (app_file_config.IsNull())
     {
@@ -19,28 +27,36 @@ int main() {
     }
 
     YAML::Node sim_file_config = YAML::LoadFile("config/simulations.yaml");
+    if (sim_file_config.IsNull())
+    {
+        std::cerr << "Error opening config file" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    // AppConfig  app_config;
-
-    // fillAppConfig(app_file_config, app_config);
-    App app(app_file_config, sim_file_config);
+    App app(arg, app_file_config, sim_file_config);
 	if (app.init() == -1)
 		return EXIT_FAILURE;
     std::cout << "App Initialized\n";
 
+
+    bool    isPaused = false;
 	while (true) {
 
 		while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED ||
-			event.key.scancode == SDL_SCANCODE_ESCAPE) {
-			SDL_Quit();
-			return 0;
+            if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED ||
+                event.key.scancode == SDL_SCANCODE_ESCAPE) {
+                SDL_Quit();
+                return 0;
+            }
+            if (event.type == SDL_EVENT_KEY_DOWN 
+                &&event.key.scancode == SDL_SCANCODE_SPACE)
+                isPaused ? isPaused = false : isPaused = true;
+            // handleEvents(app, seh, &event);
 		}
-		// handleEvents(app, seh, &event);
-		}
-		app.update();
+        if (!isPaused)
+            app.update();
 		app.render();
-		}
+    }
 	SDL_Quit();
 	return 0;
 }
