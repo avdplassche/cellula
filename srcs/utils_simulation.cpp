@@ -40,6 +40,39 @@ void    setCollision(Cell *current, Cell *other) {
 
 /* In Cell.cpp */
 
+
+void    Cell::mUpdateSoloRoutine(AppConfig& config) {
+
+    if (m_state != CellState::Default)
+    {
+        m_friction = config.f;
+        setState(CellState::Default);
+    }
+    normalizeFriction(&m_last_movement, m_friction);
+    m_movement.setValues(m_last_movement.x, m_last_movement.y);
+    m_friction /= config.f_ratio;
+    if (m_friction < config.f / config.f_time)
+        m_friction = 0;
+}
+
+void    Cell::mUpdateDependentRoutine(){
+    auto other = std::min_element(m_others.begin(), m_others.end());
+    m_movement.setValues(other->second->getPos().x - this->m_pos.x,
+        other->second->getPos().y - this->m_pos.y);
+    if (m_type == CellType::Prey && other->second->getType() == CellType::Predator)
+    {
+        m_movement.normalize();
+        m_movement.inverse();
+        m_state = CellState::Escape;
+    }
+    else if (m_type == CellType::Predator && other->second->getType() == CellType::Prey)
+    {
+        m_movement.normalize();
+        m_state = CellState::Attack;
+    }
+}
+
+
 void    normalizeFriction(Pos *movement, float f) {
     float x = movement->x;
     float y = movement->y;
@@ -85,16 +118,16 @@ void    normalizeFriction(Pos *movement, float f) {
 }
 
 bool    checkCorners(AppConfig& config, Pos* pos, Corner &corner){
-    if (pos->x <= config.playground_margin.x
-        && pos->y <= config.playground_margin.y)
+    if (pos->x <= config.cell_size
+        && pos->y <= config.cell_size)
         corner = Corner::NW;
-    else if (pos->x <= config.playground_margin.x
-        && pos->y >= config.playground_limit.y)
+    else if (pos->x <= config.cell_size
+        && pos->y >= config.playground_size.h - config.cell_size)
         corner = Corner::SW;
-    else if (pos->x >= config.playground_limit.x
-        && pos->y <= config.playground_margin.y)
+    else if (pos->x >= config.playground_size.w - config.cell_size
+        && pos->y <= 0)
         corner = Corner::NE;
-    else if (pos->x >= config.playground_limit.x && pos->y >= config.playground_limit.y)
+    else if (pos->x >= config.playground_size.w - config.cell_size&& pos->y >= config.playground_size.h - config.cell_size)
         corner = Corner::SE;
     else
         return false;
@@ -108,8 +141,8 @@ void    handleCellCorners(AppConfig &config, Vec2 *movement, std::vector<std::pa
     {
         if (!others.empty())
         {
-            if (others[0].second->getPos().x - config.playground_margin.x
-                < others[0].second->getPos().y - config.playground_margin.y)
+            if (others[0].second->getPos().x
+                < others[0].second->getPos().y)
                 movement->setValues(1, 0);
             else
                 movement->setValues(0, 1);
@@ -120,8 +153,8 @@ void    handleCellCorners(AppConfig &config, Vec2 *movement, std::vector<std::pa
     {
         if (!others.empty())
         {
-            if (config.playground_limit.x - others[0].second->getPos().x
-                < others[0].second->getPos().y - config.playground_margin.y)
+            if (config.playground_size.w - others[0].second->getPos().x
+                < others[0].second->getPos().y)
                 movement->setValues(-1, 0);
             else
                 movement->setValues(0, 1);
@@ -133,8 +166,8 @@ void    handleCellCorners(AppConfig &config, Vec2 *movement, std::vector<std::pa
     {
         if (!others.empty())
         {
-            if (others[0].second->getPos().x - config.playground_margin.x
-                <  config.playground_limit.y - others[0].second->getPos().y)
+            if (others[0].second->getPos().x 
+                <  config.playground_size.h - others[0].second->getPos().y)
                 movement->setValues(1, 0);
             else
                 movement->setValues(0, -1);
@@ -146,8 +179,8 @@ void    handleCellCorners(AppConfig &config, Vec2 *movement, std::vector<std::pa
     {
         if (!others.empty())
         {
-            if (config.playground_limit.x - others[0].second->getPos().x
-                <  config.playground_limit.y - others[0].second->getPos().y)
+            if (config.playground_size.w - others[0].second->getPos().x
+                <  config.playground_size.h - others[0].second->getPos().y)
                 movement->setValues(-1, 0);
             else
                 movement->setValues(0, -1);
@@ -160,13 +193,13 @@ void    handleCellCorners(AppConfig &config, Vec2 *movement, std::vector<std::pa
 }
 
 bool    checkLimits(AppConfig& config, Pos *pos, Side& side){
-    if (pos->x <= config.playground_margin.x)
+    if (pos->x <= config.cell_size)
         side = Side::W;
-    else if (pos->x >= config.playground_limit.x)
+    else if (pos->x >= config.playground_size.w - config.cell_size)
         side = Side::E;
-    else if (pos->y <= config.playground_margin.y)
+    else if (pos->y <= config.cell_size)
         side = Side::N;
-    else if (pos->y >= config.playground_limit.y)
+    else if (pos->y >= config.playground_size.h - config.cell_size)
         side = Side::S;
     else
         return false;
@@ -175,8 +208,6 @@ bool    checkLimits(AppConfig& config, Pos *pos, Side& side){
 
 
 void    handleCellLimits(AppConfig &config, Vec2 *movement, std::vector<std::pair<float, Cell*>>& others, Side &s) {
-    // float   m_x = 0;
-    // float   m_y = 0;
     (void) config;
     if (s == Side::W)
     {

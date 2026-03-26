@@ -1,5 +1,6 @@
 #include "App.hpp"
 #include "config.h"
+#include "logger.h"
 #include <SDL3/SDL_video.h>
 #include <yaml-cpp/node/node.h>
 
@@ -25,18 +26,18 @@ App::~App() {
 
 int App::init() {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-        std::cout << SDL_GetError() << '\n';
+        newLog(SDL_GetError(), LOG_ERROR);
         return -1;
     }
     m_window = SDL_CreateWindow(m_config.window_name.c_str(), m_config.window_width,
                                 m_config.window_height, SDL_WINDOW_RESIZABLE);
     if (!m_window) {
-        std::cout << SDL_GetError() << '\n';
+        newLog(SDL_GetError(), LOG_ERROR);
         return -1;
     }
     m_renderer = SDL_CreateRenderer(m_window, NULL);
     if (!m_renderer) {
-        std::cout << SDL_GetError() << '\n';
+        newLog(SDL_GetError(), LOG_ERROR);
         return -1;
     }
     SDL_SetRenderVSync(m_renderer, 1);
@@ -58,3 +59,4 @@ void App::render() {
 SDL_Window *App::getWindow() { return m_window; }
 
 SDL_Renderer *App::getRenderer() { return m_renderer; }
+

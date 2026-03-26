@@ -11,7 +11,6 @@ int getRandomMultiple(int min, int max, int multiple) {
     unsigned int seed = static_cast<unsigned int>(
             std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::mt19937 gen(seed);
-    //int rand = min + std::rand() % (max - min + 1);
     int rand = std::uniform_int_distribution<>(min, max)(gen);
     int m = rand / multiple;
     return multiple * m;
@@ -22,7 +21,8 @@ int getRandomInt(int min, int max) {
     unsigned int seed = static_cast<unsigned int>(
             std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::mt19937 gen(seed);
-    return std::uniform_int_distribution<>(min, max)(gen);
+    int rand = std::uniform_int_distribution<>(min, max)(gen);
+    return rand;
 }
 
 float getRandomFloat(float min, float max) {
@@ -34,12 +34,8 @@ float getRandomFloat(float min, float max) {
 
 Pos    getRandomPos(AppConfig &config) {
     Pos p;
-    p.x = getRandomMultiple(config.playground_pos.x + config.cell_size,
-                            config.playground_limit.x - config.cell_size,
-                            config.cell_size);
-    p.y = getRandomMultiple(config.playground_pos.y + config.cell_size,
-                            config.playground_limit.y + config.cell_size,
-                            config.cell_size);
+    p.x = getRandomInt(config.cell_size, config.playground_size.w - config.cell_size);
+    p.y = getRandomInt(config.cell_size, config.playground_size.h - config.cell_size);
     return p;
 }
 
@@ -79,5 +75,5 @@ void DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_
             error += (tx - (radius << 1));
         }
     }
-}   
+}
 

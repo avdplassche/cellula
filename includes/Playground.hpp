@@ -19,6 +19,7 @@ public:
 
 private:
     SDL_Texture         *m_texture = NULL;
+    SDL_FRect           m_render_rect;
     SDL_FRect           m_container_rect;
     SDL_Renderer        *m_renderer = NULL;
     // std::vector<Cell*>  m_v_cells;

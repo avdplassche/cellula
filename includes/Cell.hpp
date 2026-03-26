@@ -27,11 +27,14 @@ public:
     void    checkMovementsLimits(AppConfig&);
     void    checkMovementsCollisions(AppConfig&);
     void    updatePos(AppConfig&);
+    int     checkDeath();
 
     void    setState(CellState);
     void    setOther(Cell*, CellType);
 
     void    setOther(float distance, Cell* cell);
+
+    bool    isAlive() const;
     int     getID() const;
     Pos     getPos() const;
     int     getVision() const;
@@ -42,17 +45,19 @@ public:
     void    setDebugShape();
 
 private:
+    bool            m_isAlive = true;
     SDL_Circle      m_shape;
+
     int             m_size;
 
     Pos             m_pos;
     Vec2            m_movement;
     Pos             m_last_movement;
     float           m_friction;
-    
 
     int             m_id;
     SDL_Color       m_color;
+
     CellType        m_type;
     CellState       m_state = CellState::Default;
     float           m_speed;

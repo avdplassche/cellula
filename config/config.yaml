@@ -1,13 +1,13 @@
 # config.yaml
 window:
   width: 1920
-  height: 1080
+  height: 1200
   name: "Cellula"
 
 playground:
   margin:
-    - 20
-    - 20
+    - 80
+    - 80
 
 sim:
   speed: 2

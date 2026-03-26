@@ -9,6 +9,8 @@
 #include <yaml-cpp/node/node.h>
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
+#include "logger.h"
+
 
 int main(int argc, char **argv) {
 
@@ -22,24 +24,25 @@ int main(int argc, char **argv) {
     YAML::Node app_file_config = YAML::LoadFile("config/config.yaml");
     if (app_file_config.IsNull())
     {
-        std::cerr << "Error opening config file" << std::endl;
+        newLog("Error opening config file", LOG_ERROR);
         return EXIT_FAILURE;
     }
 
     YAML::Node sim_file_config = YAML::LoadFile("config/simulations.yaml");
     if (sim_file_config.IsNull())
     {
-        std::cerr << "Error opening config file" << std::endl;
+        newLog("Error opening simulation config file", LOG_ERROR);
         return EXIT_FAILURE;
     }
 
     App app(arg, app_file_config, sim_file_config);
 	if (app.init() == -1)
 		return EXIT_FAILURE;
-    std::cout << "App Initialized\n";
 
+    newLog("App Initialized", LOG_INFO);
 
     bool    isPaused = false;
+
 	while (true) {
 
 		while (SDL_PollEvent(&event)) {
@@ -51,7 +54,6 @@ int main(int argc, char **argv) {
             if (event.type == SDL_EVENT_KEY_DOWN 
                 &&event.key.scancode == SDL_SCANCODE_SPACE)
                 isPaused ? isPaused = false : isPaused = true;
-            // handleEvents(app, seh, &event);
 		}
         if (!isPaused)
             app.update();

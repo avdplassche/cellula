@@ -30,11 +30,8 @@ void    fillAppConfig(YAML::Node& file, AppConfig& app) {
 void    fillSimConfig(YAML::Node& file, std::vector<SimConfig>& simulations) {
     const YAML::Node& sims = file["simulations"];
     int i = 1;
-    std::cout << "Starting FillSim\n";
-
     for (auto &sim : sims)
     {
-        std::cout << "Sim " << i << '\n';
         SimConfig conf;
 
         conf.id = i;
@@ -57,6 +54,8 @@ void    printConfig(AppConfig& conf) {
     std::cout << "Window Name : " << conf.window_name << '\n';
     std::cout << "Window Size : [" << conf.window_width << ',' << conf.window_height << "]\n";
     std::cout << "Margin : [" << conf.playground_margin.x << ',' << conf.playground_margin.y << "]\n";
-    std::cout << "playground_limit : [" << conf.playground_limit.x << ',' << conf.playground_limit.y << "]\n";
+    std::cout << "Playground size : [" << conf.playground_size.w << ',' << conf.playground_size.h << "]\n";
+    std::cout << "Playground pos : [" << conf.playground_pos.x << ',' << conf.playground_pos.y << "]\n";
+    std::cout << "Cell size : " << conf.cell_size << '\n';
 }
 

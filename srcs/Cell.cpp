@@ -1,6 +1,8 @@
 #include "Cell.hpp"
 #include "config.h"
+#include "logger.h"
 #include "pch.h"
+#include <SDL3/SDL_pixels.h>
 #include <algorithm>
 #include <iomanip>
 
@@ -15,7 +17,12 @@ Cell::Cell(AppConfig& appConfig, int id, Pos origin, int size, CellClass cellCon
     m_speed = getRandomFloat(cellConfig.speed[0], cellConfig.speed[1]) / 100;
     m_vision = getRandomInt(cellConfig.vision[0], cellConfig.vision[1]);
     m_pos = origin;
+
+    m_shape.x = m_pos.x;
+    m_shape.y = m_pos.y;
+
     m_color = cellConfig.color;
+
     m_movement = {0,0};
     m_friction = appConfig.f;
 }
@@ -24,7 +31,6 @@ Cell::~Cell() {}
 
 void    Cell::draw(SDL_Renderer* renderer) {
     setRenderDrawColor(renderer, m_color);
-
     DrawCircle(renderer, m_shape.x, m_shape.y, m_shape.radius);
 }
 
@@ -36,10 +42,6 @@ void    Cell::setPos(Pos pos) {
 
 ////    Update Simulation
 
-void    Cell::emptyOthers() {
-    m_others.clear();
-}
-
 void    Cell::setState(CellState state) {
     this->m_state = state;
 }
@@ -50,11 +52,15 @@ void    Cell::setOther(float distance, Cell* cell) {
 
 //// Playground Update
 
+void    Cell::emptyOthers() {
+    m_others.clear();
+}
+
 void    Cell::updateMovement(AppConfig& config) {
     m_last_movement = {m_movement.x, m_movement.y};
     if (m_others.empty())
         mUpdateSoloRoutine(config);
-    else 
+    else
         mUpdateDependentRoutine();
 }
 
@@ -74,45 +80,35 @@ void    Cell::checkMovementsCollisions(AppConfig& config) {
 void    Cell::updatePos(AppConfig& config) {
     m_pos.x += m_movement.x * m_speed * config.simulation_speed;
     m_pos.y += m_movement.y * m_speed * config.simulation_speed;
-    setPos(m_pos);
+    m_shape.x = m_pos.x;
+    m_shape.y = m_pos.y;
 }
 
+int    Cell::checkDeath() {
 
-void    Cell::mUpdateSoloRoutine(AppConfig& config) {
+    if (m_type == CellType::Predator)
+        return 0;
+    for (auto& other : m_others)
+    {
+        if (other.second->getType() == CellType::Prey)
+            continue ;
 
-    // set the friction to max if the cell had a state
-    if (m_state != CellState::Default)
-    {
-        m_friction = config.f;
-        setState(CellState::Default);
+        float dx = other.second->getPos().x - m_pos.x;
+        float dy = other.second->getPos().y - m_pos.y;
+        if ((dx * dx + dy * dy) <= m_size)
+        {
+            m_isAlive = false;
+            return 1;
+        }
+        return 0;
     }
-    normalizeFriction(&m_last_movement, m_friction);
-    m_movement.setValues(m_last_movement.x, m_last_movement.y);
-    m_friction /= config.f_ratio;
-    if (m_friction < config.f / config.f_time)
-        m_friction = 0;
-}
-
-void    Cell::mUpdateDependentRoutine(){
-    auto other = std::min_element(m_others.begin(), m_others.end());
-    m_movement.setValues(other->second->getPos().x - this->m_pos.x,
-        other->second->getPos().y - this->m_pos.y);
-    if (m_type == CellType::Prey && other->second->getType() == CellType::Predator)
-    {
-        m_movement.normalize();
-        m_movement.inverse();
-        m_state = CellState::Escape;
-    }
-    else if (m_type == CellType::Predator && other->second->getType() == CellType::Prey)
-    {
-        m_movement.normalize();
-        m_state = CellState::Attack;
-    }
+    return 0;
 }
 
 
 ////    Getters
 
+bool    Cell::isAlive() const { return m_isAlive; };
 
 Pos     Cell::getPos() const { return m_pos;};
 
