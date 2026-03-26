@@ -42,7 +42,7 @@ void    printConfig(AppConfig&);
 
 
 namespace Color_Palette {
-	inline const SDL_Color MAIN_BACKGROUND = { 30,  30,  30, 255 };
+	inline const SDL_Color MAIN_BACKGROUND = { 20,  20,  20, 255 };
 	inline const SDL_Color SCOPE_BACKGROUND = { 50,  50,  50, 255 };
 
 	inline const SDL_Color GREY_LINES = { 80,  80,  80, 255 };
@@ -51,10 +51,10 @@ namespace Color_Palette {
 	inline const SDL_Color TEXT	   = { 255, 255, 255, 255 };
 
 	inline const SDL_Color PLAIN    = { 160, 210, 45, 255 };
-	//    inline const SDL_Color FOREST   = {  55, 130,  55, 255 };
-	//    inline const SDL_Color ICE      = { 50, 135, 245, 255 };
+	inline const SDL_Color FOREST   = {  55, 130,  55, 255 };
+	inline const SDL_Color ICE      = { 50, 135, 245, 255 };
 	inline const SDL_Color DESERT   = { 235, 150, 150, 255 };
-	//    inline const SDL_Color MOUNTAIN = { 140, 145, 160, 255 };
+	inline const SDL_Color MOUNTAIN = { 140, 145, 160, 255 };
 
 	inline const SDL_Color PURPLE_CHARACTER = {170, 51, 106, 255};
 

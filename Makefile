@@ -9,7 +9,7 @@ INCDIR   := includes
 BUILDDIR := build
 
 # --- ASAN TOGGLE ---
-USE_ASAN := 1 
+USE_ASAN := 0 
 ifeq ($(USE_ASAN), 1)
     ASAN_FLAGS := -fsanitize=address
 else
@@ -24,11 +24,8 @@ LD_FLAGS  := $(ASAN_FLAGS) -lGL -lSDL3 -lSDL3_ttf -lSDL3_image -lyaml-cpp
 
 # --- 2. FILE DEFINITIONS ---
 
-# Explicitly find all .cpp files in both main source and data subfolders
 APP_SOURCES := $(shell find $(SRCDIR) $(DATADIR) -name "*.cpp")
 
-# Map objects to the build directory while preserving subfolder paths
-# e.g., data/cell_types/prey.cpp -> build/data/cell_types/prey.o
 OBJECTS     := $(APP_SOURCES:%=$(BUILDDIR)/%.o)
 DEPENDS     := $(OBJECTS:.o=.d)
 
@@ -44,7 +41,6 @@ $(NAME): $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LD_FLAGS) -o $(NAME)
 	@printf "$(GREEN)Build Successful: ./$(NAME)$(RESET)\n"
 
-# Rule to compile any .cpp file into its corresponding .o in the build folder
 $(BUILDDIR)/%.o: %
 	@mkdir -p $(dir $@)
 	@echo "Compiling: $<"
