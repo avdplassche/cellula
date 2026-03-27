@@ -8,6 +8,8 @@ void    fillAppConfig(YAML::Node& file, AppConfig& app) {
     app.window_width = file["window"]["width"].as<float>();
     app.window_name = file["window"]["name"].as<std::string>();
 
+    app.cell_type_file = file["system"]["cell_types_file"].as<std::string>();
+
     app.playground_margin.x = file["playground"]["margin"][0].as<float>();
     app.playground_margin.y = file["playground"]["margin"][1].as<float>();
     app.playground_size = {app.window_width - app.playground_margin.x * 2,

@@ -31,12 +31,18 @@ class Cell;
 
 
 void	setRenderDrawColor(SDL_Renderer *renderer, SDL_Color color);
+SDL_Color   createSDLColour(Uint8 r, Uint8 g, Uint8 b);
+
 int     getRandomMultiple(int min, int max, int multiple);
 int     getRandomInt(int min, int max);
 float   getRandomFloat(float min, float max);
 Pos     getRandomPos(AppConfig &);
 
 void    DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius);
+
+
+CellType   getCellTypeByString(std::string s);
+
 
 ////    SimulationUtils
 

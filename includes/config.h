@@ -14,6 +14,8 @@ struct AppConfig {
     float       window_height;
     std::string window_name;
 
+    std::string cell_type_file;
+
     Pos         playground_margin;
     FSize       playground_size;
     Pos         playground_pos;

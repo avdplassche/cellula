@@ -56,6 +56,7 @@ void    Cell::mUpdateSoloRoutine(AppConfig& config) {
 }
 
 void    Cell::mUpdateDependentRoutine(){
+    // if ()
     auto other = std::min_element(m_others.begin(), m_others.end());
     m_movement.setValues(other->second->getPos().x - this->m_pos.x,
         other->second->getPos().y - this->m_pos.y);
@@ -242,29 +243,6 @@ void    handleCellLimits(AppConfig &config, Vec2 *movement, std::vector<std::pai
             movement->y = -1;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

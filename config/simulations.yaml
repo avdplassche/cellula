@@ -1,11 +1,17 @@
 
 simulations:
-  - name: "Basic simulation"
+  - name: "Basic simulation - 1000 vs 1000"
     cell:
       - type: "Predators"
         n : 1000
       - type: "Prey"
         n : 1000
+  - name: "Basic simulation - 500 vs 500"
+    cell:
+      - type: "Predators"
+        n : 500
+      - type: "Prey"
+        n : 500
   - name: "1vs1"
     cell:
       - type: "Predators"

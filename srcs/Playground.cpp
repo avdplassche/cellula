@@ -1,4 +1,5 @@
 #include "Playground.hpp"
+#include "logger.h"
 #include "Cell.hpp"
 #include "config.h"
 #include "pch.h"
@@ -6,6 +7,13 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <filesystem>
+#include <chrono>
+#include <string>
+#include <typeinfo>
+#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/node/parse.h>
+#include <fstream>
 
 Playground::Playground(){}
 
@@ -15,7 +23,9 @@ Playground::~Playground(){
         delete c;
 }
 
-void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfig& sim_config) {
+void    Playground::init(SDL_Renderer *renderer,
+                         AppConfig& app_config,
+                         SimConfig& sim_config) {
     m_app_config = app_config;
     m_renderer = renderer;
     m_size = app_config.playground_size;
@@ -31,12 +41,13 @@ void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfi
     m_render_rect = m_container_rect;
     m_cell_number = sim_config.predator_number + sim_config.prey_number;
     int cell_id = 0;
+    m_initCellClassMap();
     for (int i = 0; i < sim_config.prey_number; i++)
     {
         Cell *c = new Cell(app_config, cell_id,
                            getRandomPos(m_app_config),
                            app_config.cell_size,
-                           preyConfig());
+                           m_cellClassMap["prey"]);
         m_x_list.push_back(c);
         m_y_list.push_back(c);
         cell_id++;
@@ -44,7 +55,7 @@ void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfi
     for (int i = 0; i < sim_config.predator_number; i++){
         Cell *c = new Cell(app_config, cell_id, getRandomPos(m_app_config),
                            app_config.cell_size,
-                            predatorConfig());
+                           m_cellClassMap["predator"]);
         m_x_list.push_back(c);
         m_y_list.push_back(c);
         cell_id++;
@@ -52,20 +63,76 @@ void    Playground::init(SDL_Renderer *renderer, AppConfig& app_config, SimConfi
     update();
 }
 
+
+void    Playground::m_initCellClassMap() {
+    YAML::Node file = YAML::LoadFile(m_app_config.cell_type_file);
+    const YAML::Node& cells = file["types"];
+    
+    for(auto type : cells)
+    {
+        CellClass c;
+        std::string str = type["type"].as<std::string>();
+        c.type = getCellTypeByString(str);
+        c.color = createSDLColour(type["color"][0].as<Uint8>(),
+                                  type["color"][1].as<Uint8>(),
+                                  type["color"][2].as<Uint8>());
+        c.speed[0] = type["speed"][0].as<float>();
+        c.speed[1] = type["speed"][1].as<float>();
+        c.vision[0] = type["vision"][0].as<float>();
+        c.vision[1] = type["vision"][1].as<float>();
+        m_cellClassMap.insert({str, c});
+    }
+}
+
 void    Playground::update() {
     for (auto& cell : m_x_list)
         cell->emptyOthers();
+
+    const auto start{std::chrono::steady_clock::now()};
+
     m_sortLists();
+    const auto sorting_list{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> s1{sorting_list - start};
+    std::cout << "Sorting time : " << s1 << "\n";
+
     m_checkCollisions(m_x_list, 'x');
     m_checkCollisions(m_y_list, 'y');
+    const auto check_collision{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> s2{check_collision - sorting_list};
+    std::cout << "Collision check time : " << s2 << "\n";
+
+    
     for (auto& cell : m_x_list)
         cell->updateMovement(m_app_config);
+    const auto update_movement{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> s3{update_movement - check_collision};
+    std::cout << "Update movement time : " << s3 << "\n";
+
     for (auto& cell : m_x_list)
         cell->checkMovementsLimits(m_app_config);
-    for (auto& cell : m_x_list)
-        cell->checkMovementsCollisions(m_app_config);
+    const auto movement_limits{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> s4{movement_limits - update_movement};
+    std::cout << "Movement limit time : " << s4 << "\n";
+
+    // for (auto& cell : m_x_list)
+    //     cell->checkMovementsCollisions(m_app_config);
+    // const auto movement_collision{std::chrono::steady_clock::now()};
+    // const std::chrono::duration<double, std::milli> s4{movement_limits - update_movement};
+    // std::cout << "Movement limit time : " << s4 << "\n";
+
     for (auto& cell : m_x_list)
         cell->updatePos(m_app_config);
+    const auto pos_update{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> s6{pos_update - movement_limits};
+    std::cout << "Pos update time : " << s6 << "\n\n";
+
+
+    const auto end{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> total{end - start};
+
+    std::cout << "Update total time : " << total << "\n";
+    m_updateTime = total.count();
+    // std::cout << "Update total time : " << total.count() << "\n\n";
 }
 
 
@@ -118,6 +185,9 @@ void    Playground::draw() {
     setRenderDrawColor(m_renderer, Color_Palette::GRID_LINES);
     SDL_RenderRect(m_renderer, &m_container_rect);
 }
+
+
+double      Playground::getUpdateTime() const { return m_updateTime;}
 
 
 void    printCellXContainer(std::list<Cell *>& list) {

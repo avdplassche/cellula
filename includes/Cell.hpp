@@ -9,8 +9,9 @@
 #include <SDL3/SDL_mouse.h>
 
 #include <map>
+#include <unordered_map>
 
-enum class CellType {Prey, Predator};
+enum class CellType {Prey, Predator, Default};
 enum class CellState {Default, Escape, Attack};
 
 class Cell {
@@ -66,6 +67,7 @@ private:
     int             m_vision;
 
     std::vector<std::pair<float, Cell*>> m_others;
+    std::unordered_map<CellType, int>   m_othersTypeCount;
 
 
     SDL_Circle      m_debug_circle;

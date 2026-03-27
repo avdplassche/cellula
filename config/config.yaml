@@ -4,6 +4,9 @@ window:
   height: 1200
   name: "Cellula"
 
+system:
+  cell_types_file: "config/cell_types.yaml"
+
 playground:
   margin:
     - 80
@@ -14,5 +17,6 @@ sim:
   cell_friction: 0.05
   friction_ratio: 1.1
   friction_time: 700.0
+
 cell:
   size: 2

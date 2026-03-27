@@ -16,6 +16,7 @@ int main(int argc, char **argv) {
 
 	SDL_Event event;
     std::string arg;
+
     if (argc == 2)
         arg = argv[1];
     else

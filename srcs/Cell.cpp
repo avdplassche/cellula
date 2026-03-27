@@ -31,6 +31,8 @@ Cell::~Cell() {}
 
 void    Cell::draw(SDL_Renderer* renderer) {
     setRenderDrawColor(renderer, m_color);
+    if (m_id == 1)
+        DrawCircle(renderer, m_shape.x, m_shape.y, m_vision);
     DrawCircle(renderer, m_shape.x, m_shape.y, m_shape.radius);
 }
 
@@ -46,14 +48,21 @@ void    Cell::setState(CellState state) {
     this->m_state = state;
 }
 
-void    Cell::setOther(float distance, Cell* cell) {
-    m_others.push_back({distance, cell});
+void    Cell::setOther(float distance, Cell* other) {
+
+    if (m_othersTypeCount.find(other->getType()) == m_othersTypeCount.end())
+		m_othersTypeCount.insert({other->getType(), 1});
+    else
+        m_othersTypeCount.at(other->getType())++;
+    m_others.push_back({distance, other});
 }
 
 //// Playground Update
 
 void    Cell::emptyOthers() {
     m_others.clear();
+    for (auto& type : m_othersTypeCount)
+        type.second = 0;
 }
 
 void    Cell::updateMovement(AppConfig& config) {

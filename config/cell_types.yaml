@@ -1,0 +1,15 @@
+
+types:
+  - type: "prey"
+    color: [120, 230, 120]
+    speed: [50, 60]
+    vision: [50, 60]
+  - type: "predator"
+    color: [210, 45, 45]
+    speed: [35, 55]
+    vision: [20, 30]
+  - type: "default"
+    color: [120, 120, 120]
+    speed: [0, 0]
+    vision: [0, 0]
+

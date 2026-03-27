@@ -16,7 +16,7 @@ else
     ASAN_FLAGS :=
 endif
 
-STD_FLAGS := -Wall -Wextra -Werror -std=c++17 -MMD -MP -g -Wno-unused-result
+STD_FLAGS := -Wall -Wextra -Werror -std=c++20 -MMD -MP -g -Wno-unused-result
 INC_PATHS := -I$(INCDIR)
 CXXFLAGS  := $(STD_FLAGS) $(INC_PATHS) $(ASAN_FLAGS) -DImTextureID=void*
 LD_FLAGS  := $(ASAN_FLAGS) -lGL -lSDL3 -lSDL3_ttf -lSDL3_image -lyaml-cpp

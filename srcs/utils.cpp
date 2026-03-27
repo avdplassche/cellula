@@ -1,9 +1,17 @@
+#include "Cell.hpp"
 #include "config.h"
+#include <SDL3/SDL_stdinc.h>
 #include <cassert>
 #include <pch.h>
 
 void setRenderDrawColor(SDL_Renderer *renderer, SDL_Color color) {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+}
+
+SDL_Color   createSDLColour(Uint8 r, Uint8 g, Uint8 b) {
+    SDL_Color c = {r, g, b, 255};
+
+    return c;
 }
 
 int getRandomMultiple(int min, int max, int multiple) {
@@ -63,7 +71,6 @@ void DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_
         SDL_RenderPoint(renderer, centerX - y, centerY - x);
         SDL_RenderPoint(renderer, centerX - y, centerY + x);
 
-
         if (error <= 0) {
             y++;
             error += ty;
@@ -77,3 +84,10 @@ void DrawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_
     }
 }
 
+CellType   getCellTypeByString(std::string s) {
+    if (s == "prey")
+        return CellType::Prey;
+    if (s == "predator")
+        return CellType::Predator;
+    return CellType::Default;
+}

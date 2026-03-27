@@ -50,10 +50,16 @@ void App::update() {
 }
 
 void App::render() {
+    const auto start{std::chrono::steady_clock::now()};
     setRenderDrawColor(m_renderer, Color_Palette::MAIN_BACKGROUND);
     SDL_RenderClear(m_renderer);
     m_playground.draw();
     SDL_RenderPresent(m_renderer);
+    const auto end{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double, std::milli> total{end - start};
+    std::cout << "Render total time : " << total << "\n\n";
+    std::cout << "Frame fraction used : " << total.count() + m_playground.getUpdateTime() << " / " << 1000 / 60 << "\n\n";
+    std::cout << "------------------\n\n";
 }
 
 SDL_Window *App::getWindow() { return m_window; }
